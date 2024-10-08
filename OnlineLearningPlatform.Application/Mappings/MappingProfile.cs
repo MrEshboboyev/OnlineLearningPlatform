@@ -28,6 +28,17 @@ namespace OnlineLearningPlatform.Application.Mappings
             CreateMap<AppUser, UserActivityDTO>()
                 .ForMember(dest => dest.Roles, opt => opt.Ignore());
             #endregion
+
+            #region Course
+
+            // Course -> CourseDTO
+            CreateMap<Course, CourseDTO>()
+                .ForMember(dest => dest.InstructorName, opt => opt.MapFrom(src => src.Instructor.UserName))
+                .ReverseMap()
+                    .ForMember(dest => dest.Modules, opt => opt.Ignore())
+                    .ForMember(dest => dest.Enrollments, opt => opt.Ignore())
+                    .ForMember(dest => dest.Quizzes, opt => opt.Ignore());
+            #endregion
         }
     }
 }
