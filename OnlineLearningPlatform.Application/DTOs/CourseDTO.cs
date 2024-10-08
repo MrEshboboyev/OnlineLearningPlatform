@@ -10,7 +10,7 @@ public class CourseDTO
     public DateTime CreatedDate { get; set; }
 
     public string InstructorId { get; set; }
-    public string InstructorName { get; set; }
+    public UserDTO InstructorDTO { get; set; }
 
     public ICollection<ModuleDTO> Modules { get; set; }
     public ICollection<EnrollmentDTO> Enrollments { get; set; }

@@ -24,4 +24,14 @@ public class UserDTO
     }
 
     public DateTimeOffset? LockoutEnd { get; set; }
+
+
+
+    // One-to-one relationship with UserProfile
+    public UserProfileDTO UserProfile { get; set; }
+
+    // Relationships with other entities
+    public ICollection<CourseDTO> CoursesTaughtDTOs { get; set; }  // Instructor for Courses
+    public ICollection<EnrollmentDTO> EnrollmentsDTOs { get; set; } // Enrolled as Student in Courses
+    public ICollection<QuizSubmissionDTO> QuizSubmissionsDTOs { get; set; } // Quiz Submissions
 }
