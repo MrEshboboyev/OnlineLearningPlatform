@@ -4,8 +4,8 @@ using OnlineLearningPlatform.Infrastructure.Data;
 
 namespace OnlineLearningPlatform.Infrastructure.Repositories
 {
-    public class UserProfileRepository(AppDbContext db) : Repository<UserProfile>(db), 
-        IUserProfileRepository
+    public class AnswerRepository(AppDbContext db) : Repository<Answer>(db), 
+        IAnswerRepository
     {
     }
 }
