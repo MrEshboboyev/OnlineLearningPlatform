@@ -1,0 +1,145 @@
+﻿@model IEnumerable<UserDTO>
+
+@functions {
+    public string GetRoleBadgeClass(string role)
+    {
+        return role switch
+        {
+            "Architect" => "badge bg-danger",
+            "Employer" => "badge bg-primary",
+            "Job Seeker" => "badge bg-success",
+            _ => "badge bg-secondary"
+        };
+    }
+}
+
+<div class="container py-5">
+    <h2 class="text-center mb-5">All Users</h2>
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover" id="usersTable">
+            <thead>
+                <tr>
+                    <th>UserName</th>
+                    <th>Roles</th>
+                    <th>Is Active</th>
+                    <th>Is Suspended</th>
+                    <th>Last Login Date</th>
+                    <th>Email</th>
+                    <th>Date Registered</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var user in Model)
+                {
+                    <tr>
+                        <td>
+                            <a asp-action="Activity" asp-route-userName="@user.UserName">
+                                @user.UserName
+                            </a>
+                        </td>
+                        <td>
+                            @foreach (var role in user.Roles)
+                            {
+                                <span class="@GetRoleBadgeClass(role)">
+                                    @role
+                                    <button class="btn btn-sm btn-danger" onclick="removeRole('@role', '@user.UserName')">
+                                        X
+                                    </button>
+                                </span>
+                            }
+                        </td>
+                        <td>
+                            @if (user.IsActive)
+                            {
+                                <button class="btn btn-outline-danger btn-sm"
+                                        onclick="toggleUserStatus('@user.UserName', false)">
+                                    Deactivate
+                                </button>
+                            }
+                            else
+                            {
+                                <button class="btn btn-outline-success btn-sm"
+                                        onclick="toggleUserStatus('@user.UserName', true)">
+                                    Activate
+                                </button>
+                            }
+                        </td>
+                        <td>
+                            @if (user.IsSuspended)
+                            {
+                                <button class="btn btn-outline-warning btn-sm" onclick="unsuspendUser('@user.UserName')">Unsuspend</button>
+                                <!-- Display a button with suspension icon and suspension details pop-up -->
+                                <button class="btn btn-outline-warning btn-sm"
+                                        onclick="showSuspensionDetails('@user.UserName', '@user.SuspensionReason', '@user.SuspensionEndDate')">
+                                    <i class="bi bi-exclamation-triangle-fill text-warning"></i>
+                                </button>
+                            }
+                            else
+                            {
+                                <button class="btn btn-outline-warning btn-sm" onclick="suspendUser('@user.UserName')">Suspend</button>
+                            }
+                        </td>
+                        <td>@user.LastLoginDate?.ToString("g")</td>
+                        <td>@user.Email</td>
+                        <td>@user.DateRegistered.ToShortDateString()</td>
+                        <td>
+                            <button class="btn btn-outline-info btn-sm"
+                                    onclick="openUserDetails( '@user.UserName',
+                                    '@string.Join(", ", user.Roles)',
+                                    '@user.IsActive',
+                                    '@user.LastLoginDate',
+                                    '@user.Email',
+                                    '@user.DateRegistered')">
+                                Details
+                            </button>
+
+                            <button class="btn btn-outline-primary btn-sm"
+                                    onclick="assignRole('@user.UserName')">
+                                Assign Role
+                            </button>
+
+                            <button class="btn btn-outline-secondary btn-sm"
+                                    onclick="resetPassword('@user.UserName')">
+                                Reset Password
+                            </button>
+
+                            <button class="btn btn-outline-danger btn-sm"
+                                    onclick="confirmDeleteUser('@user.UserName')">
+                                Delete
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        initializeDataTable('#usersTable', 7);
+        function openUserDetails(userName, roles, isActive, lastLoginDate, email, dateRegistered) {
+            const details = {
+                "Username": userName,
+                "Roles": roles,
+                "Is Active": isActive,
+                "Last Login Date": lastLoginDate,
+                "Date Registered": dateRegistered,
+                "Email": email,
+            };
+            openDetails(userName, details);
+        }
+        
+        function showSuspensionDetails(userName, suspensionReason, suspensionEndDate) {
+            const details = {
+                "Username": userName,
+                "Suspension Reason": suspensionReason,
+                "Suspension End Date": suspensionEndDate
+            };
+            openDetails(userName, details);
+        }
+    </script>
+    <script src="~/js/userManagement.js"></script>
+}

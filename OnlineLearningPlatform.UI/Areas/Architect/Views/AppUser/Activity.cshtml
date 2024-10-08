@@ -1,0 +1,56 @@
+﻿@model UserActivityDTO
+
+<div class="container py-5">
+    <h2 class="text-center mb-4">User Activity: @Model.UserName</h2>
+
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <h4>User Info</h4>
+            <p><strong>Email:</strong> @Model.Email</p>
+            <p><strong>Roles:</strong> @string.Join(", ", Model.Roles)</p>
+            <p><strong>Last Login Date:</strong> @(Model.LastLoginDate.HasValue ? Model.LastLoginDate.Value.ToString("dd MMM yyyy") : "Never Logged In")</p>
+            <p>
+                <strong>Status:</strong>
+                @if (Model.IsActive)
+                {
+                    <span class="badge bg-success">Active</span>
+                }
+                else
+                {
+                    <span class="badge bg-danger">Inactive</span>
+                }
+            </p>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        initializeDataTable('#jobListingsTable', 5);
+        initializeDataTable('#jobApplicationsTable', 5);
+
+        // SweetAlert for Job Listing Details
+        function showJobListingDetails(title, description, location, salaryRange, postedDate) {
+            const details = {
+                "Title": title,
+                "Description": description,
+                "Location": location,
+                "Salary Range": salaryRange,
+                "Posted Date": postedDate,
+            };
+            openDetails(title, details);
+        }
+
+        // SweetAlert for Job Application Details
+        function showApplicationDetails(title, resumePath, coverLetter, applicationDate, status) {
+            const details = {
+                "Title": title,
+                "Resume": `<a href="${resumePath}" target="_blank">View Resume</a>`,
+                "Cover Letter": coverLetter,
+                "Application Date": applicationDate,
+                "Status": status,
+            };
+            openDetails(title, details);
+        }
+    </script>
+}
