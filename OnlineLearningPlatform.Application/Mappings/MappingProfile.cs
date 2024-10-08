@@ -10,9 +10,7 @@ namespace OnlineLearningPlatform.Application.Mappings
         {
             #region UserProfile
             CreateMap<UserProfile, UserProfileDTO>()
-                .ForMember(dest => dest.OwnerName, opt => opt.MapFrom(src => src.User.UserName))
                 .ReverseMap()
-                    .ForMember(dest => dest.UserId, opt => opt.Ignore())
                     .ForMember(dest => dest.User, opt => opt.Ignore());
             #endregion
 
@@ -22,8 +20,12 @@ namespace OnlineLearningPlatform.Application.Mappings
             CreateMap<AppUser, UserDTO>()
                 .ForMember(dest => dest.Roles, opt => opt.Ignore())
                 .ReverseMap()
-                    .ForMember(dest => dest.UserProfile, opt => opt.Ignore());
+                    .ForMember(dest => dest.UserProfile, opt => opt.Ignore())
+                    .ForMember(dest => dest.CoursesTaught, opt => opt.Ignore())
+                    .ForMember(dest => dest.Enrollments, opt => opt.Ignore())
+                    .ForMember(dest => dest.QuizSubmissions, opt => opt.Ignore());
 
+            // fix this coming soon (admin panel)
             // AppUser -> UserActivityDTO
             CreateMap<AppUser, UserActivityDTO>()
                 .ForMember(dest => dest.Roles, opt => opt.Ignore());
@@ -33,11 +35,19 @@ namespace OnlineLearningPlatform.Application.Mappings
 
             // Course -> CourseDTO
             CreateMap<Course, CourseDTO>()
-                .ForMember(dest => dest.InstructorName, opt => opt.MapFrom(src => src.Instructor.UserName))
                 .ReverseMap()
                     .ForMember(dest => dest.Modules, opt => opt.Ignore())
                     .ForMember(dest => dest.Enrollments, opt => opt.Ignore())
                     .ForMember(dest => dest.Quizzes, opt => opt.Ignore());
+            #endregion
+
+            #region Enrollment
+
+            // Enrollment -> EnrollmentDTO
+            CreateMap<Enrollment, EnrollmentDTO>()
+                .ReverseMap()
+                    .ForMember(dest => dest.Course, opt => opt.Ignore())
+                    .ForMember(dest => dest.Student, opt => opt.Ignore());
             #endregion
         }
     }
