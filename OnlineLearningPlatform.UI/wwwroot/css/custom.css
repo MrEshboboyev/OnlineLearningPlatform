@@ -1,0 +1,179 @@
+﻿/* Darker background for all cards */
+.card {
+    border-radius: 15px;
+    background-color: #2c3e50; /* Darker background */
+    border: none;
+}
+
+/* Card title styling */
+.card-title {
+    font-weight: bold;
+    color: #f1c40f; /* Adjusted color for better contrast on dark background */
+}
+
+/* Card body padding */
+.card-body {
+    padding: 20px;
+}
+
+/* Badge styling for various status or categories */
+.badge {
+    font-size: 0.9rem;
+    margin-right: 5px;
+}
+
+/* Button hover effect for smooth transitions */
+.btn {
+    transition: all 0.2s ease-in-out;
+}
+
+    .btn:hover {
+        transform: scale(1.05);
+    }
+
+/* Job Listing Card Styling */
+.job-listing-card {
+    border-radius: 15px;
+    background-color: rgba(44, 62, 80, 0.9); /* Darker background for job listing cards */
+    transition: transform 0.2s ease-in-out;
+}
+
+    .job-listing-card:hover {
+        transform: scale(1.05);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    }
+
+/* Apply reduced blur and opacity for inactive job listings */
+.inactive-job {
+    filter: blur(1px); /* Reduced blur */
+    opacity: 0.8; /* Slightly more visible */
+}
+
+/* Styling for focused form elements */
+.form-label {
+    font-weight: bold;
+}
+
+.form-control:focus {
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    border-color: #007bff;
+}
+
+/* Button submit hover effect */
+button[type="submit"] {
+    transition: all 0.3s ease;
+}
+
+    button[type="submit"]:hover {
+        transform: scale(1.05);
+        background-color: #27ae60;
+        border-color: #27ae60;
+    }
+
+/* Body padding for fixed navbar */
+body {
+    padding-top: 56px;
+}
+
+/* Side navigation (sidenav) styles */
+.sidenav {
+    height: 100%;
+    width: 250px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: #2c3e50;
+    overflow-x: hidden;
+    padding-top: 20px;
+    transition: width 0.3s;
+}
+
+    .sidenav a {
+        padding: 10px 15px;
+        text-decoration: none;
+        font-size: 18px;
+        color: #f1f1f1;
+        display: block;
+    }
+
+        .sidenav a:hover {
+            background-color: #007bff;
+            color: white;
+        }
+
+/* Main content adjustments for side navigation */
+.main-content {
+    margin-left: 250px;
+    padding: 15px;
+}
+
+/* Navbar branding */
+.navbar-brand {
+    font-weight: bold;
+    font-size: 24px;
+    color: #ffffff;
+}
+
+/* Apply page-specific styling */
+.card-title {
+    color: #f39c12; /* Gold color for titles */
+}
+
+.card-body {
+    background-color: #34495e; /* Slightly darker background for form */
+    color: #ecf0f1;
+}
+
+/* Form control styling */
+.form-control {
+    background-color: #2c3e50;
+    color: #ecf0f1;
+    border: none;
+    border-radius: 5px;
+}
+
+    .form-control:focus {
+        border-color: #3498db;
+        box-shadow: 0 0 10px rgba(52, 152, 219, 0.5);
+    }
+
+/* Button styling for submit button */
+button[type="submit"] {
+    transition: all 0.3s ease;
+}
+
+    button[type="submit"]:hover {
+        transform: scale(1.05);
+        background-color: #27ae60;
+        border-color: #27ae60;
+    }
+
+/* Adjust body padding for navbar */
+body {
+    padding-top: 56px;
+}
+
+/* Notification card specific styles */
+.notification-card {
+    border-radius: 15px;
+    transition: all 0.3s ease;
+}
+
+    .notification-card.bg-light {
+        background-color: #f8f9fa; /* Light background for read notifications */
+    }
+
+/* Buttons */
+.btn-outline-dark {
+    transition: all 0.3s ease;
+}
+
+    .btn-outline-dark:hover {
+        background-color: #343a40;
+        color: #fff;
+    }
+
+/* Customize badge */
+.badge {
+    font-size: 0.85rem;
+}
