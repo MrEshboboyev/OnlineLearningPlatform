@@ -49,6 +49,15 @@ namespace OnlineLearningPlatform.Application.Mappings
                     .ForMember(dest => dest.Course, opt => opt.Ignore())
                     .ForMember(dest => dest.Student, opt => opt.Ignore());
             #endregion
+
+            #region Module
+
+            // Module -> ModuleDTO
+            CreateMap<Module, ModuleDTO>()
+                .ReverseMap()
+                    .ForMember(dest => dest.Course, opt => opt.Ignore())
+                    .ForMember(dest => dest.Lessons, opt => opt.Ignore());
+            #endregion
         }
     }
 }
