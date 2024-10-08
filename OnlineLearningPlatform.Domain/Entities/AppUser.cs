@@ -11,7 +11,7 @@ namespace OnlineLearningPlatform.Domain.Entities
         public string? SuspensionReason { get; set; }
         public DateTime? SuspensionEndDate { get; set; }
 
-        // Derived property
+        // Derived property to check suspension status
         public bool IsSuspended
         {
             get
@@ -21,6 +21,12 @@ namespace OnlineLearningPlatform.Domain.Entities
             }
         }
 
+        // One-to-one relationship with UserProfile
         public UserProfile UserProfile { get; set; }
+
+        // Relationships with other entities
+        public ICollection<Course> CoursesTaught { get; set; }  // Instructor for Courses
+        public ICollection<Enrollment> Enrollments { get; set; } // Enrolled as Student in Courses
+        public ICollection<QuizSubmission> QuizSubmissions { get; set; } // Quiz Submissions
     }
 }
