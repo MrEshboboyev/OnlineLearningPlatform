@@ -76,6 +76,15 @@ namespace OnlineLearningPlatform.Application.Mappings
                     .ForMember(dest => dest.Questions, opt => opt.Ignore())
                     .ForMember(dest => dest.QuizSubmissions, opt => opt.Ignore());
             #endregion
+
+            #region Question
+
+            // Question -> QuestionDTO
+            CreateMap<Question, QuestionDTO>()
+                .ReverseMap()
+                    .ForMember(dest => dest.Quiz, opt => opt.Ignore())
+                    .ForMember(dest => dest.Answers, opt => opt.Ignore());
+            #endregion
         }
     }
 }
