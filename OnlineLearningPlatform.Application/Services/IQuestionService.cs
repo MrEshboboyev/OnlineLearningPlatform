@@ -38,4 +38,8 @@ public interface IQuestionService
     #region Question Order
     Task<ResponseDTO<object>> SetQuestionOrderAsync(int quizId, Dictionary<int, int> questionOrderMap);
     #endregion
+
+    #region IQuestionService and IAnswerService Combined
+    Task<ResponseDTO<bool>> ValidateCorrectAnswerExistsForQuestionAsync(int questionId);
+    #endregion
 }
