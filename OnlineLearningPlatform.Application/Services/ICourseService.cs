@@ -44,26 +44,5 @@ public interface ICourseService
 
     #region Course Statistics and Insights
     Task<ResponseDTO<int>> GetTotalEnrollmentsInCourseAsync(int courseId);
-    Task<ResponseDTO<Dictionary<string, int>>> GetCourseCompletionStatsAsync(int courseId);
-    Task<ResponseDTO<double>> GetCourseRatingAsync(int courseId);
-    #endregion
-
-    #region Course Publishing and Status
-    Task<ResponseDTO<bool>> IsCoursePublishedAsync(int courseId);
-
-    // POST actions
-    Task<ResponseDTO<object>> PublishCourseAsync(int courseId);
-    Task<ResponseDTO<object>> UnpublishCourseAsync(int courseId);
-    #endregion
-
-    #region Course Content Preview and Recommendations
-    Task<ResponseDTO<IEnumerable<CourseDTO>>> GetRecommendedCoursesAsync(string userId);
-    Task<ResponseDTO<CourseDTO>> GetCoursePreviewAsync(int courseId);
-    #endregion
-
-    #region Course Moderation and Approval (if needed)
-    // POST actions
-    Task<ResponseDTO<object>> ApproveCourseAsync(int courseId);
-    Task<ResponseDTO<object>> RejectCourseAsync(int courseId, string reason);
     #endregion
 }
