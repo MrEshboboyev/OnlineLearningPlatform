@@ -10,7 +10,7 @@ public interface IEnrollmentService
 
     // POST actions
     Task<ResponseDTO<object>> EnrollStudentInCourseAsync(int courseId, string studentId);
-    Task<ResponseDTO<object>> UnenrollStudentInCourseAsync(int courseId, string studentId);
+    Task<ResponseDTO<object>> UnenrollStudentFromCourseAsync(int courseId, string studentId);
     #endregion
 
     #region Enrollment Status and Validation
@@ -18,23 +18,8 @@ public interface IEnrollmentService
     Task<ResponseDTO<DateTime>> GetEnrollmentDateAsync(int courseId, string userId);
     #endregion
 
-    #region Progress Tracking
-    Task<ResponseDTO<double>> GetStudentProgressAsync(int courseId, string studentId);
-
-    // POST actions
-    Task<ResponseDTO<object>> UpdateStudentProgressAsync(int courseId, string studentId, double progressPercentage);
-    #endregion
-
-    #region Completion and Achievement
-    Task<ResponseDTO<bool>> IsCourseCompletedAsync(int courseId, string studentId);
-
-    // POST actions
-    Task<ResponseDTO<object>> MarkCourseIsCompletedAsync(int courseId, string studentId);
-    #endregion
-
     #region Enrollment Statistics
     Task<ResponseDTO<int>> GetTotalEnrollmentsInCourseAsync(int courseId);
-    Task<ResponseDTO<Dictionary<string, int>>> GetEnrollmentStatisticsAsync()
     #endregion
 
     #region Enrollment History
