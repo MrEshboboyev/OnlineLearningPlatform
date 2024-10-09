@@ -102,6 +102,15 @@ namespace OnlineLearningPlatform.Application.Mappings
                     .ForMember(dest => dest.Student, opt => opt.Ignore())
                     .ForMember(dest => dest.Quiz, opt => opt.Ignore());
             #endregion
+
+            #region Progress
+
+            // Progress -> ProgressDTO
+            CreateMap<Progress, ProgressDTO>()
+                .ReverseMap()
+                    .ForMember(dest => dest.Student, opt => opt.Ignore())
+                    .ForMember(dest => dest.Lesson, opt => opt.Ignore());
+            #endregion
         }
     }
 }
