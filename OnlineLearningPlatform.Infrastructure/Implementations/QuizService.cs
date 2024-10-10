@@ -3,7 +3,6 @@ using OnlineLearningPlatform.Application.Common.Interfaces;
 using OnlineLearningPlatform.Application.DTOs;
 using OnlineLearningPlatform.Application.Services;
 using OnlineLearningPlatform.Domain.Entities;
-using System.Linq.Expressions;
 
 namespace OnlineLearningPlatform.Infrastructure.Implementations;
 
