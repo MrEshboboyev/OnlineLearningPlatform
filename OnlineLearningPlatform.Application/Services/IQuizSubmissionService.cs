@@ -27,23 +27,11 @@ public interface IQuizSubmissionService
 
     #region Submission Validation
     Task<ResponseDTO<bool>> HasStudentSubmittedQuizAsync(int quizId, string studentId);
-    Task<ResponseDTO<bool>> IsQuizSubmissionLateAsync(int submissionId);
     #endregion
 
     #region Submission History and Statistics
     Task<ResponseDTO<IEnumerable<QuizSubmissionDTO>>> GetQuizSubmissionHistoryAsync(string studentId);
     Task<ResponseDTO<double>> GetAverageGradeForQuizAsync(int quizId);
     Task<ResponseDTO<double>> GetStudentAverageQuizGradeAsync(string studentId);
-    #endregion
-
-    #region Quiz Retakes and Attempts
-    Task<ResponseDTO<int>> GetQuizAttemptCountAsync(int quizId, string studentId);
-
-    // POST actions
-    Task<ResponseDTO<bool>> AllowQuizRetakeAsync(int quizId, string studentId);
-    #endregion
-
-    #region Submission Deadlines and Timing
-    Task<ResponseDTO<bool>> CheckQuizSubmissionDeadlineAsync(int quizId);
     #endregion
 }
