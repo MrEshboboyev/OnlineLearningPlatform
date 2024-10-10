@@ -11,7 +11,7 @@ public interface IAnswerService
     // POST actions
     Task<ResponseDTO<object>> AddAnswerToQuestionAsync(int questionId, AnswerDTO answerDTO);
     Task<ResponseDTO<object>> UpdateAnswerAsync(AnswerDTO answerDTO);
-    Task<ResponseDTO<object>> DeleteAnswerToQuestionAsync(int answerId);
+    Task<ResponseDTO<object>> DeleteAnswerFromQuestionAsync(int answerId);
     #endregion
 
     #region Answer Correctness
@@ -21,17 +21,7 @@ public interface IAnswerService
     Task<ResponseDTO<bool>> SetCorrectAnswerAsync(int answerId);
     #endregion
 
-    #region Answer Feedback
-    // POST actions
-    Task<ResponseDTO<object>> ProvideFeedbackForAnswerAsync(int answerId, string feedback);
-    #endregion
-
     #region Answer Validation
     Task<ResponseDTO<bool>> ValidateAnswerAsync(int answerId);
-    #endregion
-
-    #region Answer Duplication
-    // POST actions
-    Task<ResponseDTO<object>> DuplicateAnswerAsync(int answer);
     #endregion
 }
