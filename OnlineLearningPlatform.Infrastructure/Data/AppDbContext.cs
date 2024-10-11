@@ -116,6 +116,11 @@ namespace OnlineLearningPlatform.Infrastructure.Data
                 .HasColumnType("timestamp")
                 .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
+            modelBuilder.Entity<Course>()
+                .Property(p => p.CreatedDate)
+                .HasColumnType("timestamp")
+                .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
             modelBuilder.Entity<Progress>()
                 .Property(p => p.CompletionDate)
                 .HasColumnType("timestamp")
