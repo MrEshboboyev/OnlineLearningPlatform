@@ -36,6 +36,7 @@ namespace OnlineLearningPlatform.Application.Mappings
 
             // Course -> CourseDTO
             CreateMap<Course, CourseDTO>()
+                .ForMember(dest => dest.InstructorDTO, opt => opt.MapFrom(src => src.Instructor))
                 .ReverseMap()
                     .ForMember(dest => dest.Modules, opt => opt.Ignore())
                     .ForMember(dest => dest.Enrollments, opt => opt.Ignore())

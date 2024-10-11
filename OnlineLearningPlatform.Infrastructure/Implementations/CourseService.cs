@@ -54,11 +54,14 @@ public class CourseService(IUnitOfWork unitOfWork, IMapper mapper) : ICourseServ
         {
             var courseForDb = _mapper.Map<Course>(courseDTO);
 
+            // assign time
+            courseForDb.CreatedDate = DateTime.Now;
+
             // create and add
             await _unitOfWork.Course.AddAsync(courseForDb);
             await _unitOfWork.SaveAsync();
 
-            return new ResponseDTO<object>(null);
+            return new ResponseDTO<object>(null, "Course created!");
         }
         catch (Exception ex)
         {

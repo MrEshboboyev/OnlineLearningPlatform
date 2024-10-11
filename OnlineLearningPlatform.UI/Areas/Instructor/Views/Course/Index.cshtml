@@ -1,126 +1,144 @@
 ﻿@model IEnumerable<CourseDTO>
 
-<div class="container">
-    <h2>Your Courses</h2>
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Your Courses</h2>
 
     @if (Model == null || !Model.Any())
     {
-        <p>No courses found yet.</p>
+        <div class="alert alert-warning text-center" role="alert">
+            No courses found yet.
+        </div>
     }
     else
     {
-        @foreach (var course in Model)
-        {
-            <div class="course">
-                <h3>@course.Title</h3>
-                <p>@course.Description</p>
-                <p>Category: @course.Category</p>
-                <p>Level: @course.Level</p>
+        <div class="row row-cols-1 row-cols-md-2 g-4">
+            @foreach (var course in Model)
+            {
+                <div class="col">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title">@course.Title</h5>
+                            <p class="card-text">@course.Description</p>
+                            <p class="text-muted">Category: @course.Category</p>
+                            <p class="text-muted">Level: @course.Level</p>
 
-                <!-- Button to show course details -->
-                <button onclick="showDetails('Course', '@course.Title', '@course.Description')">View Course Details</button>
+                            <!-- Button to show course details -->
+                            <button class="btn btn-primary mb-3" onclick="showDetails('Course', '@course.Title', '@course.Description')">
+                                View Course Details
+                            </button>
 
-                <!-- Modules -->
-                <div class="modules">
-                    <h4>Modules</h4>
-                    @if (course.Modules == null || !course.Modules.Any())
-                    {
-                        <p>No modules found yet.</p>
-                    }
-                    else
-                    {
-                        @foreach (var module in course.Modules)
-                        {
-                            <p>@module.Title</p>
-
-                            <!-- Button to show module details -->
-                            <button onclick="showDetails('Module', '@module.Title', 'Related to course: @course.Title')">View Module Details</button>
-
-                            <!-- Lessons -->
-                            <div class="lessons">
-                                <h5>Lessons</h5>
-                                @if (module.LessonDTOs == null || !module.LessonDTOs.Any())
+                            <!-- Modules Section -->
+                            <div>
+                                <h6>Modules</h6>
+                                @if (course.Modules == null || !course.Modules.Any())
                                 {
-                                    <p>No lessons found yet.</p>
+                                    <p class="text-muted">No modules found yet.</p>
                                 }
                                 else
                                 {
-                                    @foreach (var lesson in module.LessonDTOs)
-                                    {
-                                        <p>@lesson.Title</p>
+                                    <ul class="list-group mb-3">
+                                        @foreach (var module in course.Modules)
+                                        {
+                                            <li class="list-group-item">
+                                                <strong>@module.Title</strong>
+                                                <button class="btn btn-link btn-sm float-end" onclick="showDetails('Module', '@module.Title', 'Related to course: @course.Title')">View Module Details</button>
+                                            </li>
 
-                                        <!-- Button to show lesson details -->
-                                        <button onclick="showDetails('Lesson', '@lesson.Title', '@lesson.Content')">View Lesson Details</button>
-                                    }
+                                            <!-- Lessons -->
+                                            <ul class="list-group ms-3">
+                                                <h6>Lessons</h6>
+                                                @if (module.LessonDTOs == null || !module.LessonDTOs.Any())
+                                                {
+                                                    <li class="list-group-item text-muted">No lessons found yet.</li>
+                                                }
+                                                else
+                                                {
+                                                    @foreach (var lesson in module.LessonDTOs)
+                                                    {
+                                                        <li class="list-group-item">
+                                                            @lesson.Title
+                                                            <button class="btn btn-link btn-sm float-end" onclick="showDetails('Lesson', '@lesson.Title', '@lesson.Content')">View Lesson Details</button>
+                                                        </li>
+                                                    }
+                                                }
+                                            </ul>
+                                        }
+                                    </ul>
                                 }
                             </div>
-                        }
-                    }
-                </div>
 
-                <!-- Quizzes -->
-                <div class="quizzes">
-                    <h4>Quizzes</h4>
-                    @if (course.Quizzes == null || !course.Quizzes.Any())
-                    {
-                        <p>No quizzes found yet.</p>
-                    }
-                    else
-                    {
-                        @foreach (var quiz in course.Quizzes)
-                        {
-                            <p>@quiz.Title</p>
-
-                            <!-- Button to show quiz details -->
-                            <button onclick="showDetails('Quiz', '@quiz.Title', 'Related to course: @course.Title')">View Quiz Details</button>
-
-                            <!-- Quiz Submissions -->
-                            <div class="quiz-submissions">
-                                <h5>Submissions</h5>
-                                @if (quiz.QuizSubmissionDTOs == null || !quiz.QuizSubmissionDTOs.Any())
+                            <!-- Quizzes Section -->
+                            <div>
+                                <h6>Quizzes</h6>
+                                @if (course.Quizzes == null || !course.Quizzes.Any())
                                 {
-                                    <p>No submissions found yet.</p>
+                                    <p class="text-muted">No quizzes found yet.</p>
                                 }
                                 else
                                 {
-                                    @foreach (var submission in quiz.QuizSubmissionDTOs)
-                                    {
-                                        <p>Submitted by: @submission.StudentDTO.UserName</p>
-                                        <p>Grade: @submission.Grade</p>
+                                    <ul class="list-group mb-3">
+                                        @foreach (var quiz in course.Quizzes)
+                                        {
+                                            <li class="list-group-item">
+                                                @quiz.Title
+                                                <button class="btn btn-link btn-sm float-end" onclick="showDetails('Quiz', '@quiz.Title', 'Related to course: @course.Title')">View Quiz Details</button>
+                                            </li>
 
-                                        <!-- Button to show submission details -->
-                                        <button onclick="showDetails('Submission', 'Quiz by @submission.StudentDTO.UserName', 'Grade: @submission.Grade')">View Submission Details</button>
-                                    }
+                                            <!-- Quiz Submissions -->
+                                            <ul class="list-group ms-3">
+                                                <h6>Submissions</h6>
+                                                @if (quiz.QuizSubmissionDTOs == null || !quiz.QuizSubmissionDTOs.Any())
+                                                {
+                                                    <li class="list-group-item text-muted">No submissions found yet.</li>
+                                                }
+                                                else
+                                                {
+                                                    @foreach (var submission in quiz.QuizSubmissionDTOs)
+                                                    {
+                                                        <li class="list-group-item">
+                                                            Submitted by: @submission.StudentDTO.UserName | Grade: @submission.Grade
+                                                            <button class="btn btn-link btn-sm float-end" onclick="showDetails('Submission', 'Quiz by @submission.StudentDTO.UserName', 'Grade: @submission.Grade')">View Submission Details</button>
+                                                        </li>
+                                                    }
+                                                }
+                                            </ul>
+                                        }
+                                    </ul>
                                 }
                             </div>
-                        }
-                    }
-                </div>
 
-                <!-- Enrollments -->
-                <div class="enrollments">
-                    <h4>Enrollments</h4>
-                    @if (course.Enrollments == null || !course.Enrollments.Any())
-                    {
-                        <p>No enrollments found yet.</p>
-                    }
-                    else
-                    {
-                        @foreach (var enrollment in course.Enrollments)
-                        {
-                            <p>Student: @enrollment.StudentDTO.UserName</p>
-                            <p>Progress: @enrollment.ProgressPercentage%</p>
+                            <!-- Enrollments Section -->
+                            <div>
+                                <h6>Enrollments</h6>
+                                @if (course.Enrollments == null || !course.Enrollments.Any())
+                                {
+                                    <p class="text-muted">No enrollments found yet.</p>
+                                }
+                                else
+                                {
+                                    <ul class="list-group mb-3">
+                                        @foreach (var enrollment in course.Enrollments)
+                                        {
+                                            <li class="list-group-item">
+                                                Student: @enrollment.StudentDTO.UserName | Progress: @enrollment.ProgressPercentage%
+                                                <button class="btn btn-link btn-sm float-end" onclick="showDetails('Enrollment', 'Student: @enrollment.StudentDTO.UserName', 'Progress: @enrollment.ProgressPercentage%')">View Enrollment Details</button>
+                                            </li>
+                                        }
+                                    </ul>
+                                }
+                            </div>
 
-                            <!-- Button to show enrollment details -->
-                            <button onclick="showDetails('Enrollment', 'Student: @enrollment.StudentDTO.UserName', 'Progress: @enrollment.ProgressPercentage%')">View Enrollment Details</button>
-                        }
-                    }
+                            <!-- Details Button -->
+                            <a asp-action="Details" asp-route-courseId="@course.Id" class="btn btn-outline-info">Details</a>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        }
+            }
+        </div>
     }
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     function showDetails(type, title, content) {
         Swal.fire({

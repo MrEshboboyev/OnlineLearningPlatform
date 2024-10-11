@@ -1,0 +1,51 @@
+﻿@model CourseDTO
+
+<div class="container">
+    <h2>Create New Course</h2>
+
+    <form asp-action="Create" method="post">
+        <!-- Course Title -->
+        <div class="form-group">
+            <label for="Title">Course Title</label>
+            <input type="text" class="form-control" id="Title" name="Title" value="@Model.Title" required />
+        </div>
+
+        <!-- Course Description -->
+        <div class="form-group">
+            <label for="Description">Course Description</label>
+            <textarea class="form-control" id="Description" name="Description" rows="4" required>@Model.Description</textarea>
+        </div>
+
+        <!-- Course Category -->
+        <div class="form-group">
+            <label for="Category">Course Category</label>
+            <input type="text" class="form-control" id="Category" name="Category" value="@Model.Category" required />
+        </div>
+
+        <!-- Course Level -->
+        <div class="form-group">
+            <label for="Level">Course Level</label>
+            <select class="form-control" id="Level" name="Level">
+                <option value="Beginner">Beginner</option>
+                <option value="Intermediate">Intermediate</option>
+                <option value="Advanced">Advanced</option>
+            </select>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn btn-primary">Create Course</button>
+    </form>
+</div>
+
+<!-- Optional SweetAlert2 success notification (optional) -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    function showSuccess() {
+        Swal.fire({
+            title: 'Success!',
+            text: 'The course has been created successfully.',
+            icon: 'success',
+            confirmButtonText: 'Close'
+        });
+    }
+</script>

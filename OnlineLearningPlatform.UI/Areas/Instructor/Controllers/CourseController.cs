@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OnlineLearningPlatform.Application.Common.Utility;
+using OnlineLearningPlatform.Application.DTOs;
 using OnlineLearningPlatform.Application.Services;
 using OnlineLearningPlatform.UI.Controllers;
 
@@ -16,6 +17,34 @@ namespace OnlineLearningPlatform.UI.Areas.Instructor.Controllers
         {
             var allCourses = (await _courseService.GetCoursesByInstructorAsync(GetUserId())).Data;
             return View(allCourses);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Details(int courseId)
+        {
+            var course = (await _courseService.GetCourseByIdAsync(courseId)).Data;
+            return View(course);
+        }
+        
+        [HttpGet]
+        public IActionResult Create() => View(new CourseDTO());
+
+        [HttpPost]
+        public async Task<IActionResult> Create(CourseDTO courseDTO)
+        {
+            // assign instructorId
+            courseDTO.InstructorId = GetUserId();
+
+            var result = await _courseService.CreateCourseAsync(courseDTO);
+
+            if (result.Success)
+            {
+                TempData["success"] = "Course created successfully!";
+                return RedirectToAction(nameof(Index));
+            }
+
+            TempData["error"] = $"Error : {result.Message}";
+            return View(courseDTO);
         }
     }
 }

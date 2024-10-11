@@ -1,0 +1,138 @@
+﻿@model CourseDTO
+
+<div class="container my-5">
+    <!-- Page Heading -->
+    <h2 class="text-center mb-4">Course Details: <span class="text-primary">@Model.Title</span></h2>
+
+    <!-- Course Information -->
+    <div class="row">
+        <!-- Course Info Card -->
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h4 class="card-title text-info">Course Information</h4>
+                    <p><strong>Title:</strong> @Model.Title</p>
+                    <p><strong>Description:</strong> @Model.Description</p>
+                    <p><strong>Category:</strong> <span class="badge bg-secondary">@Model.Category</span></p>
+                    <p><strong>Level:</strong> <span class="badge bg-warning text-dark">@Model.Level</span></p>
+                    <p><strong>Created Date:</strong> <span class="text-muted">@Model.CreatedDate.ToString("MMMM dd, yyyy")</span></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Instructor Info Card -->
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h4 class="card-title text-info">Instructor Information</h4>
+                    <p><strong>Name:</strong> @Model.InstructorDTO.UserName</p>
+                    <p><strong>Email:</strong> <a href="mailto:@Model.InstructorDTO.Email">@Model.InstructorDTO.Email</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modules Section -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h4 class="card-title text-info">Modules</h4>
+            @if (Model.Modules == null || !Model.Modules.Any())
+            {
+                <div class="alert alert-warning" role="alert">
+                    No modules available for this course.
+                </div>
+            }
+            else
+            {
+                <ul class="list-group">
+                    @foreach (var module in Model.Modules)
+                    {
+                        <li class="list-group-item">
+                            <strong>@module.Title</strong>
+
+                            <!-- Lessons -->
+                            <ul class="list-group mt-2">
+                                <h5>Lessons</h5>
+                                @if (module.LessonDTOs == null || !module.LessonDTOs.Any())
+                                {
+                                    <li class="list-group-item text-muted">No lessons available for this module.</li>
+                                }
+                                else
+                                {
+                                    @foreach (var lesson in module.LessonDTOs)
+                                    {
+                                        <li class="list-group-item">
+                                            <i class="bi bi-book"></i> @lesson.Title
+                                        </li>
+                                    }
+                                }
+                            </ul>
+                        </li>
+                    }
+                </ul>
+            }
+        </div>
+    </div>
+
+    <!-- Quizzes Section -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h4 class="card-title text-info">Quizzes</h4>
+            @if (Model.Quizzes == null || !Model.Quizzes.Any())
+            {
+                <div class="alert alert-warning" role="alert">
+                    No quizzes available for this course.
+                </div>
+            }
+            else
+            {
+                <ul class="list-group">
+                    @foreach (var quiz in Model.Quizzes)
+                    {
+                        <li class="list-group-item"><i class="bi bi-patch-question"></i> <strong>@quiz.Title</strong></li>
+                    }
+                </ul>
+            }
+        </div>
+    </div>
+
+    <!-- Enrolled Students Section -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h4 class="card-title text-info">Enrolled Students</h4>
+            @if (Model.Enrollments == null || !Model.Enrollments.Any())
+            {
+                <div class="alert alert-warning" role="alert">
+                    No students enrolled in this course.
+                </div>
+            }
+            else
+            {
+                <ul class="list-group">
+                    @foreach (var enrollment in Model.Enrollments)
+                    {
+                        <li class="list-group-item">
+                            <i class="bi bi-person"></i> <strong>@enrollment.StudentDTO.UserName</strong>
+                            <div class="text-muted">Enrollment Date: @enrollment.EnrollmentDate.ToString("MMMM dd, yyyy")</div>
+                            <div>Progress: <span class="badge bg-success">@enrollment.ProgressPercentage%</span></div>
+                        </li>
+                    }
+                </ul>
+            }
+        </div>
+    </div>
+
+</div>
+
+<!-- Optional SweetAlert2 for more details -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    function showDetails(title, content) {
+        Swal.fire({
+            title: title,
+            text: content,
+            icon: 'info',
+            confirmButtonText: 'Close'
+        });
+    }
+</script>
