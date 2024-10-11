@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using OnlineLearningPlatform.Application.Common.Interfaces;
+using OnlineLearningPlatform.Application.Services;
 using OnlineLearningPlatform.Application.Services.Interfaces;
 using OnlineLearningPlatform.Infrastructure.Data;
 using OnlineLearningPlatform.Infrastructure.Implementations;
@@ -18,6 +19,15 @@ namespace OnlineLearningPlatform.Infrastructure.Configurations
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IUserProfileService, UserProfileService>();
+            services.AddScoped<IAnswerService, AnswerService>();
+            services.AddScoped<ICourseService, CourseService>();
+            services.AddScoped<IEnrollmentService, EnrollmentService>();
+            services.AddScoped<ILessonService, LessonService>();
+            services.AddScoped<IModuleService, ModuleService>();
+            services.AddScoped<IProgressService, ProgressService>();
+            services.AddScoped<IQuestionService, QuestionService>();
+            services.AddScoped<IQuizService, QuizService>();
+            services.AddScoped<IQuizSubmissionService, QuizSubmissionService>();
 
             return services;
         }

@@ -5,7 +5,7 @@ namespace OnlineLearningPlatform.UI.Controllers
 {
     public abstract class BaseController : Controller
     {
-        protected string Index()
+        protected string GetUserId()
         {
             return User.FindFirstValue(ClaimTypes.NameIdentifier);
         }
