@@ -1,6 +1,4 @@
-﻿using OnlineLearningPlatform.Domain.Entities;
-
-namespace OnlineLearningPlatform.Application.DTOs;
+﻿namespace OnlineLearningPlatform.Application.DTOs;
 
 public class QuizSubmissionDTO
 {
