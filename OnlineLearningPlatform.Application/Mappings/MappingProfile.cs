@@ -10,6 +10,7 @@ namespace OnlineLearningPlatform.Application.Mappings
         {
             #region UserProfile
             CreateMap<UserProfile, UserProfileDTO>()
+                .ForMember(dest => dest.UserDTO, opt => opt.MapFrom(src => src.User))
                 .ReverseMap()
                     .ForMember(dest => dest.User, opt => opt.Ignore());
             #endregion

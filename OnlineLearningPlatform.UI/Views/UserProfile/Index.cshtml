@@ -12,7 +12,7 @@
         <div class="col-md-8 col-lg-6">
             <div class="card shadow-sm">
                 <div class="card-header text-center bg-primary text-white">
-                    <h4><i class="bi bi-person-circle"></i> @Model.OwnerName's Profile</h4>
+                    <h4><i class="bi bi-person-circle"></i> @Model.UserDTO.UserName's Profile</h4>
                 </div>
                 <div class="card-body">
                     <div class="row mb-3">
@@ -22,7 +22,7 @@
 
                     <div class="row mb-3">
                         <div class="col-4 text-muted"><strong>Username:</strong></div>
-                        <div class="col-8">@Model.OwnerName</div>
+                        <div class="col-8">@Model.UserDTO.UserName</div>
                     </div>
 
                     <div class="row mb-3">
