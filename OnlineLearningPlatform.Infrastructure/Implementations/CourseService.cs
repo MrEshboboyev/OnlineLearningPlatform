@@ -218,24 +218,26 @@ public class CourseService(IUnitOfWork unitOfWork, IMapper mapper) : ICourseServ
     {
         try
         {
-            var courseFromDb = await _unitOfWork.Course.GetAsync(c => c.Id.Equals(courseId)) 
-                ?? throw new Exception("Course not found");
+            var existEnrollment = await _unitOfWork.Enrollment.AnyAsync(
+                e => e.CourseId.Equals(courseId) && e.StudentId.Equals(userId));
 
-            var userFromDb = await _unitOfWork.User.GetAsync(u => u.Id.Equals(userId)) 
-                ?? throw new Exception("User not found");
+            if (existEnrollment)
+                throw new Exception("Student already enrolled for this course!");
+
+            // is not enrolled yet
 
             // prepare enrollment
             Enrollment enrollmentForDb = new()
             {
-                CourseId = courseFromDb.Id,
-                StudentId = userFromDb.Id,
+                CourseId = courseId,
+                StudentId = userId,
                 EnrollmentDate = DateTime.Now
             };
 
             await _unitOfWork.Enrollment.AddAsync(enrollmentForDb);
             await _unitOfWork.SaveAsync();
 
-            return new ResponseDTO<object>(null);
+            return new ResponseDTO<object>(null, "Student enrolled to this course!");
         }
         catch (Exception ex)
         {
