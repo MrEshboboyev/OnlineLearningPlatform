@@ -9,6 +9,7 @@ namespace OnlineLearningPlatform.UI.Areas.Instructor.Controllers
 {
     [Area(SD.Role_Instructor)]
     [Authorize(Roles = SD.Role_Instructor)]
+    [Route($"{SD.Role_Instructor}/Course")]
     public class CourseController(ICourseService courseService) : BaseController
     {
         private readonly ICourseService _courseService = courseService;
@@ -19,17 +20,17 @@ namespace OnlineLearningPlatform.UI.Areas.Instructor.Controllers
             return View(allCourses);
         }
 
-        [HttpGet]
+        [HttpGet("Details/{courseId}")]
         public async Task<IActionResult> Details(int courseId)
         {
             var course = (await _courseService.GetCourseByIdAsync(courseId)).Data;
             return View(course);
         }
         
-        [HttpGet]
+        [HttpGet("Create")]
         public IActionResult Create() => View(new CourseDTO());
 
-        [HttpPost]
+        [HttpPost("Create")]
         public async Task<IActionResult> Create(CourseDTO courseDTO)
         {
             // assign instructorId
@@ -47,14 +48,14 @@ namespace OnlineLearningPlatform.UI.Areas.Instructor.Controllers
             return View(courseDTO);
         }
 
-        [HttpGet]
+        [HttpGet("Update/{courseId}")]
         public async Task<IActionResult> Update(int courseId)
         {
             var course = (await _courseService.GetCourseByIdAsync(courseId)).Data;
             return View(course);
         }
 
-        [HttpPost]
+        [HttpPost("Update/{courseId}")]
         public async Task<IActionResult> Update(CourseDTO courseDTO)
         {
             // assign instructorId
@@ -72,14 +73,14 @@ namespace OnlineLearningPlatform.UI.Areas.Instructor.Controllers
             return View(courseDTO);
         }
         
-        [HttpGet]
+        [HttpGet("Delete/{courseId}")]
         public async Task<IActionResult> Delete(int courseId)
         {
             var course = (await _courseService.GetCourseByIdAsync(courseId)).Data;
             return View(course);
         }
 
-        [HttpPost]
+        [HttpPost("Delete/{courseId}")]
         public async Task<IActionResult> Delete(CourseDTO courseDTO)
         {
             // assign instructorId
