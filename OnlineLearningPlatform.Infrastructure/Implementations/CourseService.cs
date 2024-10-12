@@ -201,7 +201,7 @@ public class CourseService(IUnitOfWork unitOfWork, IMapper mapper) : ICourseServ
         {
             var courseEnrollments = await _unitOfWork.Enrollment.GetAllAsync(
                 filter: e => e.CourseId.Equals(courseId),
-                includeProperties: "Student,Course");
+                includeProperties: "Student,Course.Modules.Lessons");
 
             var mappedEnrollments = _mapper.Map<IEnumerable<EnrollmentDTO>>(courseEnrollments);
 

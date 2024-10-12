@@ -225,5 +225,12 @@ namespace OnlineLearningPlatform.UI.Areas.Instructor.Controllers
             TempData["error"] = $"Error : {result.Message}";
             return View(lessonDTO);
         }
+
+        [HttpGet("Enrollments/{courseId}")]
+        public async Task<IActionResult> Enrollments(int courseId)
+        {
+            var courseEnrollments = (await _courseService.GetEnrollmentsByCourseAsync(courseId)).Data;
+            return View(courseEnrollments);
+        }
     }
 }

@@ -1,0 +1,88 @@
+﻿@model IEnumerable<EnrollmentDTO>
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4 text-light">Course Enrollments</h2>
+
+    <!-- Enroll New Student Button -->
+    <div class="text-end mb-4">
+        <a asp-action="EnrollNewStudent" asp-route-courseId="@ViewBag.CourseId" class="btn btn-outline-primary">Enroll New Student</a>
+    </div>
+
+    @if (Model == null || !Model.Any())
+    {
+        <div class="alert alert-warning text-center" role="alert">
+            No enrollments available.
+        </div>
+    }
+    else
+    {
+        <div class="accordion" id="courseEnrollmentsAccordion">
+            @foreach (var enrollment in Model)
+            {
+                <div class="accordion-item bg-dark border-light shadow-sm mb-4">
+                    <h2 class="accordion-header" id="heading-enrollment-@enrollment.Id">
+                        <button class="accordion-button collapsed text-light bg-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-enrollment-@enrollment.Id" aria-expanded="false" aria-controls="collapse-enrollment-@enrollment.Id">
+                            @enrollment.StudentDTO.UserName (Progress: @enrollment.ProgressPercentage%)
+                        </button>
+                    </h2>
+                    <div id="collapse-enrollment-@enrollment.Id" class="accordion-collapse collapse" aria-labelledby="heading-enrollment-@enrollment.Id" data-bs-parent="#courseEnrollmentsAccordion">
+                        <div class="accordion-body text-light bg-dark">
+
+                            <p><strong>Course:</strong> @enrollment.CourseDTO.Title</p>
+                            <p><strong>Enrolled Date:</strong> @enrollment.EnrollmentDate.ToShortDateString()</p>
+                            <p><strong>Progress:</strong> @enrollment.ProgressPercentage%</p>
+
+                            <!-- Modules Accordion -->
+                            <div class="accordion mt-3" id="moduleAccordion-@enrollment.Id">
+                                <h5 class="text-info">Modules</h5>
+                                @if (enrollment.CourseDTO.Modules == null || !enrollment.CourseDTO.Modules.Any())
+                                {
+                                    <div class="alert alert-secondary">No modules found for this course.</div>
+                                }
+                                else
+                                {
+                                    @foreach (var module in enrollment.CourseDTO.Modules)
+                                    {
+                                        <div class="accordion-item bg-dark border-light">
+                                            <h2 class="accordion-header" id="moduleHeading-@module.Id">
+                                                <button class="accordion-button collapsed text-light bg-info" type="button" data-bs-toggle="collapse" data-bs-target="#moduleCollapse-@module.Id" aria-expanded="false" aria-controls="moduleCollapse-@module.Id">
+                                                    @module.Title
+                                                </button>
+                                            </h2>
+                                            <div id="moduleCollapse-@module.Id" class="accordion-collapse collapse" aria-labelledby="moduleHeading-@module.Id" data-bs-parent="#moduleAccordion-@enrollment.Id">
+                                                <div class="accordion-body text-light">
+                                                    <ul class="list-group list-group-flush">
+                                                        @if (module.LessonDTOs == null || !module.LessonDTOs.Any())
+                                                        {
+                                                            <li class="list-group-item bg-dark text-muted">No lessons found yet.</li>
+                                                        }
+                                                        else
+                                                        {
+                                                            @foreach (var lesson in module.LessonDTOs)
+                                                            {
+                                                                <li class="list-group-item bg-dark text-light">
+                                                                    @lesson.Title
+                                                                </li>
+                                                            }
+                                                        }
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                            </div>
+
+                            <!-- Unenroll User Button -->
+                            <div class="text-end mt-4">
+                                <form asp-action="UnenrollUser" asp-route-enrollmentId="@enrollment.Id" method="post">
+                                    <button type="submit" class="btn btn-danger">Unenroll this User</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
