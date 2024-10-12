@@ -1,0 +1,77 @@
+﻿@model CourseDTO
+
+<div class="container mt-5">
+    <h2 class="text-center text-light">@Model.Title</h2>
+
+    <div class="card bg-dark text-light shadow-sm">
+        <div class="card-body">
+            <h5>Description</h5>
+            <p>@Model.Description</p>
+
+            <div class="accordion" id="courseDetailsAccordion">
+                <!-- Modules Section -->
+                <div class="accordion-item bg-dark border-secondary">
+                    <h2 class="accordion-header" id="headingModules">
+                        <button class="accordion-button collapsed bg-dark text-light" type="button" data-bs-toggle="collapse" data-bs-target="#collapseModules" aria-expanded="false">
+                            View Modules
+                        </button>
+                    </h2>
+                    <div id="collapseModules" class="accordion-collapse collapse" aria-labelledby="headingModules">
+                        <div class="accordion-body">
+                            @if (Model.Modules == null || !Model.Modules.Any())
+                            {
+                                <p class="text-muted">No modules available.</p>
+                            }
+                            else
+                            {
+                                <ul class="list-group">
+                                    @foreach (var module in Model.Modules)
+                                    {
+                                        <li class="list-group-item bg-dark text-light">
+                                            <strong>@module.Title</strong>
+                                            <ul>
+                                                @foreach (var lesson in module.LessonDTOs)
+                                                {
+                                                    <li>@lesson.Title</li>
+                                                }
+                                            </ul>
+                                        </li>
+                                    }
+                                </ul>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quizzes Section -->
+                <div class="accordion-item bg-dark border-secondary">
+                    <h2 class="accordion-header" id="headingQuizzes">
+                        <button class="accordion-button collapsed bg-dark text-light" type="button" data-bs-toggle="collapse" data-bs-target="#collapseQuizzes" aria-expanded="false">
+                            View Quizzes
+                        </button>
+                    </h2>
+                    <div id="collapseQuizzes" class="accordion-collapse collapse" aria-labelledby="headingQuizzes">
+                        <div class="accordion-body">
+                            @if (Model.Quizzes == null || !Model.Quizzes.Any())
+                            {
+                                <p class="text-muted">No quizzes available.</p>
+                            }
+                            else
+                            {
+                                <ul class="list-group">
+                                    @foreach (var quiz in Model.Quizzes)
+                                    {
+                                        <li class="list-group-item bg-dark text-light">@quiz.Title</li>
+                                    }
+                                </ul>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Enroll Button -->
+            <a asp-action="Enroll" asp-route-courseId="@Model.Id" class="btn btn-success mt-3">Enroll in this Course</a>
+        </div>
+    </div>
+</div>

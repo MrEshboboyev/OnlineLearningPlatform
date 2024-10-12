@@ -1,0 +1,88 @@
+﻿@model IEnumerable<CourseDTO>
+
+<div class="container mt-5">
+    <h2 class="text-center text-light mb-4">Available Courses</h2>
+
+    @if (Model == null || !Model.Any())
+    {
+        <div class="alert alert-warning text-center" role="alert">
+            No courses available at the moment.
+        </div>
+    }
+    else
+    {
+        <div class="row row-cols-1 row-cols-md-2 g-4">
+            @foreach (var course in Model)
+            {
+                <div class="col">
+                    <div class="card h-100 bg-dark text-light shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title">@course.Title</h5>
+                            <p class="card-text">@course.Description</p>
+                            <p class="text-muted">Category: @course.Category</p>
+                            <p class="text-muted">Level: @course.Level</p>
+                            <p class="text-muted">Modules: @course.Modules.Count</p>
+                            <p class="text-muted">Quizzes: @course.Quizzes.Count</p>
+
+                            <!-- Accordion for more details (Modules, Quizzes) -->
+                            <div class="accordion" id="courseAccordion-@course.Id">
+                                <div class="accordion-item bg-dark border-secondary">
+                                    <h2 class="accordion-header" id="headingModules-@course.Id">
+                                        <button class="accordion-button collapsed bg-dark text-light" type="button" data-bs-toggle="collapse" data-bs-target="#collapseModules-@course.Id" aria-expanded="false">
+                                            View Modules
+                                        </button>
+                                    </h2>
+                                    <div id="collapseModules-@course.Id" class="accordion-collapse collapse" aria-labelledby="headingModules-@course.Id" data-bs-parent="#courseAccordion-@course.Id">
+                                        <div class="accordion-body">
+                                            @if (course.Modules == null || !course.Modules.Any())
+                                            {
+                                                <p class="text-muted">No modules available.</p>
+                                            }
+                                            else
+                                            {
+                                                <ul class="list-group">
+                                                    @foreach (var module in course.Modules)
+                                                    {
+                                                        <li class="list-group-item bg-dark text-light">@module.Title</li>
+                                                    }
+                                                </ul>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="accordion-item bg-dark border-secondary">
+                                    <h2 class="accordion-header" id="headingQuizzes-@course.Id">
+                                        <button class="accordion-button collapsed bg-dark text-light" type="button" data-bs-toggle="collapse" data-bs-target="#collapseQuizzes-@course.Id" aria-expanded="false">
+                                            View Quizzes
+                                        </button>
+                                    </h2>
+                                    <div id="collapseQuizzes-@course.Id" class="accordion-collapse collapse" aria-labelledby="headingQuizzes-@course.Id" data-bs-parent="#courseAccordion-@course.Id">
+                                        <div class="accordion-body">
+                                            @if (course.Quizzes == null || !course.Quizzes.Any())
+                                            {
+                                                <p class="text-muted">No quizzes available.</p>
+                                            }
+                                            else
+                                            {
+                                                <ul class="list-group">
+                                                    @foreach (var quiz in course.Quizzes)
+                                                    {
+                                                        <li class="list-group-item bg-dark text-light">@quiz.Title</li>
+                                                    }
+                                                </ul>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Details Button -->
+                            <a asp-action="Details" asp-route-courseId="@course.Id" class="btn btn-outline-info mt-3">Details</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

@@ -75,14 +75,19 @@ app.UseRouting();
 app.UseAuthorization();
 
 app.MapAreaControllerRoute(
-    name: "MyAreaInstructor",
-    areaName: "Instructor",
-    pattern: "Instructor/{controller=JobListing}/{action=Index}");
-
-app.MapAreaControllerRoute(
     name: "MyAreaArchitect",
     areaName: "Architect",
-    pattern: "Architect/{controller=JobListing}/{action=Index}");
+    pattern: "Architect/{controller=AppUser}/{action=Index}");
+
+app.MapAreaControllerRoute(
+    name: "MyAreaInstructor",
+    areaName: "Instructor",
+    pattern: "Instructor/{controller=Course}/{action=Index}");
+
+app.MapAreaControllerRoute(
+    name: "MyAreaStudent",
+    areaName: "Student",
+    pattern: "Student/{controller=Course}/{action=Index}");
 
 app.MapControllerRoute(
     name: "default",
