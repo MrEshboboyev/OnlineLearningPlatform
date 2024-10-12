@@ -1,7 +1,14 @@
 ﻿@model IEnumerable<CourseDTO>
 
 <div class="container mt-5">
-    <h2 class="text-center text-light mb-4">Available Courses</h2>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-light">Available Courses</h2>
+
+        <!-- My Enrolled Courses Button -->
+        <a asp-action="EnrolledCourses" class="btn btn-outline-success">
+            My Enrolled Courses
+        </a>
+    </div>
 
     @if (Model == null || !Model.Any())
     {

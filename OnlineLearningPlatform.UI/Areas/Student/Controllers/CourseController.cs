@@ -9,9 +9,11 @@ namespace OnlineLearningPlatform.UI.Areas.Student.Controllers
     [Area(SD.Role_Student)]
     [Authorize(Roles = SD.Role_Student)]
     [Route($"{SD.Role_Student}/Course")]
-    public class CourseController(ICourseService courseService) : BaseController
+    public class CourseController(ICourseService courseService, 
+        IEnrollmentService enrollmentService) : BaseController
     {
         private readonly ICourseService _courseService = courseService;
+        private readonly IEnrollmentService _enrollmentService = enrollmentService;
 
         public async Task<IActionResult> Index()
         {
@@ -39,6 +41,13 @@ namespace OnlineLearningPlatform.UI.Areas.Student.Controllers
 
             TempData["error"] = $"Error : {result.Message}";
             return RedirectToAction(nameof(Details), new { courseId });
+        }
+
+        [HttpGet("EnrolledCourses")]
+        public async Task<IActionResult> EnrolledCourses()
+        {
+            var enrolledCourses = (await _enrollmentService.GetEnrollmentsByStudentAsync(GetUserId())).Data;
+            return View(enrolledCourses);
         }
     }
 }

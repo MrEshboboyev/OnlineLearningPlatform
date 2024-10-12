@@ -34,7 +34,7 @@ public class EnrollmentService(IUnitOfWork unitOfWork, IMapper mapper) : IEnroll
         {
             var allEnrollments = await _unitOfWork.Enrollment.GetAllAsync(
                 filter: e => e.StudentId.Equals(studentId),
-                includeProperties: "Course,Student");
+                includeProperties: "Course.Modules.Lessons,Student");
 
             var mappedEnrollments = _mapper.Map<IEnumerable<EnrollmentDTO>>(allEnrollments);
 
