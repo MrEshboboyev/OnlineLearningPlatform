@@ -1,0 +1,18 @@
+﻿@model ModuleDTO
+
+<div class="container">
+    <h2 class="text-light">Create New Module for @Model.CourseDTO.Title</h2>
+
+    <form asp-action="CreateModule" asp-route-courseId="@Model.CourseId" method="post" class="bg-dark p-4 rounded">
+        @Html.AntiForgeryToken()
+        <input asp-for="CourseId" hidden/>
+        <div class="mb-3">
+            <label for="Title" class="form-label text-light">Module Title</label>
+            <input asp-for="Title" class="form-control bg-secondary text-light" />
+            <span asp-validation-for="Title" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-success">Create Module</button>
+        <a asp-action="ManageModules" asp-route-courseId="@Model.CourseId" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>

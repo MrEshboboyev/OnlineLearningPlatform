@@ -1,0 +1,56 @@
+﻿@model IEnumerable<ModuleDTO>
+
+<div class="container">
+    <h2 class="text-light">Manage Modules for Course: @Model.FirstOrDefault()?.CourseDTO?.Title</h2>
+
+    <!-- Button to create a new module -->
+    <div class="d-flex justify-content-between mb-4">
+        <h4 class="text-light">Modules</h4>
+        <a asp-action="CreateModule" asp-route-courseId="@ViewBag.CourseId" class="btn btn-success">Add New Module</a>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-warning text-light">
+            No modules found for this course.
+        </div>
+    }
+    else
+    {
+        <div class="accordion" id="modulesAccordion">
+            @foreach (var module in Model)
+            {
+                <div class="accordion-item bg-dark border-secondary">
+                    <h2 class="accordion-header" id="heading-@module.Id">
+                        <button class="accordion-button collapsed text-light bg-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-@module.Id" aria-expanded="false" aria-controls="collapse-@module.Id">
+                            @module.Title
+                        </button>
+                    </h2>
+                    <div id="collapse-@module.Id" class="accordion-collapse collapse" aria-labelledby="heading-@module.Id" data-bs-parent="#modulesAccordion">
+                        <div class="accordion-body text-light">
+                            <p><strong>Lessons:</strong></p>
+                            @if (module.LessonDTOs == null || !module.LessonDTOs.Any())
+                            {
+                                <p>No lessons available in this module.</p>
+                            }
+                            else
+                            {
+                                <ul>
+                                    @foreach (var lesson in module.LessonDTOs)
+                                    {
+                                        <li>@lesson.Title</li>
+                                    }
+                                </ul>
+                            }
+
+                            <div class="mt-3">
+                                <a asp-action="EditModule" asp-route-moduleId="@module.Id" class="btn btn-primary">Edit Module</a>
+                                <a asp-action="ManageLessons" asp-route-moduleId="@module.Id" class="btn btn-warning">Manage Lessons</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

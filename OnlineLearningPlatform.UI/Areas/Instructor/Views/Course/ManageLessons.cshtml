@@ -1,0 +1,32 @@
+﻿@model IEnumerable<LessonDTO>
+
+<div class="container">
+    <h2 class="text-light">Manage Lessons for Module: @ViewBag.ModuleTitle</h2>
+
+    <!-- Button to create a new lesson -->
+    <div class="d-flex justify-content-between mb-4">
+        <h4 class="text-light">Lessons</h4>
+        <a asp-action="CreateLesson" asp-route-moduleId="@ViewBag.ModuleId" class="btn btn-success">Add New Lesson</a>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-warning text-light">
+            No lessons found for this module.
+        </div>
+    }
+    else
+    {
+        <ul class="list-group bg-dark">
+            @foreach (var lesson in Model)
+            {
+                <li class="list-group-item d-flex justify-content-between bg-secondary text-light">
+                    @lesson.Title
+                    <div>
+                        <a asp-action="EditLesson" asp-route-lessonId="@lesson.Id" class="btn btn-primary">Edit</a>
+                    </div>
+                </li>
+            }
+        </ul>
+    }
+</div>

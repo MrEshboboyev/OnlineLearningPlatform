@@ -73,7 +73,7 @@ public class LessonService(IUnitOfWork unitOfWork, IMapper mapper) : ILessonServ
             await _unitOfWork.Lesson.AddAsync(lessonForDb);
             await _unitOfWork.SaveAsync();
 
-            return new ResponseDTO<object>(null);
+            return new ResponseDTO<object>(null, "Create lesson!");
         }
         catch (Exception ex)
         {
@@ -94,7 +94,7 @@ public class LessonService(IUnitOfWork unitOfWork, IMapper mapper) : ILessonServ
             await _unitOfWork.Lesson.UpdateAsync(lessonFromDb);
             await _unitOfWork.SaveAsync();
 
-            return new ResponseDTO<object>(null);
+            return new ResponseDTO<object>(null, "Update lesson!");
         }
         catch (Exception ex)
         {
@@ -112,7 +112,7 @@ public class LessonService(IUnitOfWork unitOfWork, IMapper mapper) : ILessonServ
             await _unitOfWork.Lesson.RemoveAsync(lessonFromDb);
             await _unitOfWork.SaveAsync();
 
-            return new ResponseDTO<object>(null);
+            return new ResponseDTO<object>(null, "Delete lesson!");
         }
         catch (Exception ex)
         {

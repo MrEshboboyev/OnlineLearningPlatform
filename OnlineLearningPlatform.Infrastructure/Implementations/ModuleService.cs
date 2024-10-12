@@ -45,7 +45,6 @@ public class ModuleService(IUnitOfWork unitOfWork, IMapper mapper) : IModuleServ
             return new ResponseDTO<IEnumerable<ModuleDTO>>(ex.Message);
         }
     }
-
     public async Task<ResponseDTO<ModuleDTO>> GetModuleByIdAsync(int moduleId)
     {
         try
@@ -75,7 +74,7 @@ public class ModuleService(IUnitOfWork unitOfWork, IMapper mapper) : IModuleServ
             await _unitOfWork.Module.AddAsync(moduleForDb);
             await _unitOfWork.SaveAsync();
 
-            return new ResponseDTO<object>(null);
+            return new ResponseDTO<object>(null, "Module created successfully!");
         }
         catch (Exception ex)
         {
@@ -97,7 +96,7 @@ public class ModuleService(IUnitOfWork unitOfWork, IMapper mapper) : IModuleServ
             await _unitOfWork.Module.UpdateAsync(moduleFromDb);
             await _unitOfWork.SaveAsync();
 
-            return new ResponseDTO<object>(null);
+            return new ResponseDTO<object>(null, "Module updated successfully!");
         }
         catch (Exception ex)
         {
@@ -116,7 +115,7 @@ public class ModuleService(IUnitOfWork unitOfWork, IMapper mapper) : IModuleServ
             await _unitOfWork.Module.RemoveAsync(moduleFromDb);
             await _unitOfWork.SaveAsync();
 
-            return new ResponseDTO<object>(null);
+            return new ResponseDTO<object>(null, "Module deleted successfully!");
         }
         catch (Exception ex)
         {
@@ -163,7 +162,7 @@ public class ModuleService(IUnitOfWork unitOfWork, IMapper mapper) : IModuleServ
             await _unitOfWork.Module.UpdateAsync(module);
             await _unitOfWork.SaveAsync();
 
-            return new ResponseDTO<object>(null);
+            return new ResponseDTO<object>(null, "Add lesson to module!");
         }
         catch (Exception ex)
         {
@@ -182,7 +181,7 @@ public class ModuleService(IUnitOfWork unitOfWork, IMapper mapper) : IModuleServ
             await _unitOfWork.Lesson.UpdateAsync(lesson);
             await _unitOfWork.SaveAsync();
 
-            return new ResponseDTO<object>(null);
+            return new ResponseDTO<object>(null, "Remove lesson to module!");
         }
         catch (Exception ex)
         {

@@ -299,7 +299,7 @@ public class CourseService(IUnitOfWork unitOfWork, IMapper mapper) : ICourseServ
             await _unitOfWork.Course.UpdateAsync(courseFromDb);
             await _unitOfWork.SaveAsync();
 
-            return new ResponseDTO<object>(null);
+            return new ResponseDTO<object>(null, "Added module to course!");
         }
         catch (Exception ex)
         {
@@ -317,7 +317,7 @@ public class CourseService(IUnitOfWork unitOfWork, IMapper mapper) : ICourseServ
             await _unitOfWork.Module.RemoveAsync(moduleFromDb);
             await _unitOfWork.SaveAsync();
 
-            return new ResponseDTO<object>(null);
+            return new ResponseDTO<object>(null, "Remove module from course!");
         }
         catch (Exception ex)
         {
@@ -346,7 +346,8 @@ public class CourseService(IUnitOfWork unitOfWork, IMapper mapper) : ICourseServ
         try
         {
             var instructorCourses = await _unitOfWork.Course.GetAllAsync(
-                c => c.InstructorId.Equals(instructorId));
+                filter: c => c.InstructorId.Equals(instructorId),
+                includeProperties: "Instructor,Modules,Enrollments,Quizzes");
 
             var mappedCourses = _mapper.Map<IEnumerable<CourseDTO>>(instructorCourses);
 

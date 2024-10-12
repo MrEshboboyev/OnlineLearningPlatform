@@ -56,6 +56,8 @@ namespace OnlineLearningPlatform.Application.Mappings
 
             // Module -> ModuleDTO
             CreateMap<Module, ModuleDTO>()
+                .ForMember(dest => dest.CourseDTO, opt => opt.MapFrom(src => src.Course))
+                .ForMember(dest => dest.LessonDTOs, opt => opt.MapFrom(src => src.Lessons))
                 .ReverseMap()
                     .ForMember(dest => dest.Course, opt => opt.Ignore())
                     .ForMember(dest => dest.Lessons, opt => opt.Ignore());
@@ -65,6 +67,7 @@ namespace OnlineLearningPlatform.Application.Mappings
 
             // Lesson -> LessonDTO
             CreateMap<Lesson, LessonDTO>()
+                .ForMember(dest => dest.ModuleDTO, opt => opt.MapFrom(src => src.Module))
                 .ReverseMap()
                     .ForMember(dest => dest.Module, opt => opt.Ignore());
             #endregion
