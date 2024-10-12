@@ -23,129 +23,98 @@
                             <p class="text-muted">Level: @course.Level</p>
 
                             <!-- Button to show course details -->
-                            <button class="btn btn-primary mb-3" onclick="showDetails('Course', '@course.Title', '@course.Description')">
+                            <button class="btn btn-primary mb-3 hover-zoom" onclick="showDetails('Course', '@course.Title', '@course.Description')">
                                 View Course Details
                             </button>
 
-                            <!-- Modules Section -->
-                            <div class="mb-3">
-                                <h6 class="text-info">Modules</h6>
-                                @if (course.Modules == null || !course.Modules.Any())
-                                {
-                                    <p class="text-muted">No modules found yet.</p>
-                                }
-                                else
-                                {
-                                    <ul class="list-group list-group-flush">
-                                        @foreach (var module in course.Modules)
-                                        {
-                                            <li class="list-group-item bg-dark text-light border-secondary">
-                                                <strong>@module.Title</strong>
-                                                <button class="btn btn-link btn-sm float-end text-info" onclick="showDetails('Module', '@module.Title', 'Related to course: @course.Title')">
-                                                    View Module Details
-                                                </button>
-                                                <!-- Manage Modules Button -->
-                                                <a asp-action="ManageLessons" asp-route-moduleId="@module.Id" class="btn btn-outline-info btn-sm float-end me-2 hover-zoom">
-                                                    Manage Lessons
-                                                </a>
-                                            </li>
-
-                                            <!-- Lessons -->
-                                            <ul class="list-group list-group-flush ms-3">
-                                                <h6 class="text-muted">Lessons</h6>
-                                                @if (module.LessonDTOs == null || !module.LessonDTOs.Any())
+                            <!-- Course Management Section -->
+                            <div class="accordion" id="courseAccordion-@course.Id">
+                                <div class="accordion-item bg-dark border-secondary">
+                                    <h6 class="accordion-header" id="headingModules-@course.Id">
+                                        <button class="accordion-button collapsed bg-dark text-info" type="button" data-bs-toggle="collapse" data-bs-target="#collapseModules-@course.Id" aria-expanded="false" aria-controls="collapseModules-@course.Id">
+                                            Manage Course Elements
+                                        </button>
+                                    </h6>
+                                    <div id="collapseModules-@course.Id" class="accordion-collapse collapse" aria-labelledby="headingModules-@course.Id" data-bs-parent="#courseAccordion-@course.Id">
+                                        <div class="accordion-body">
+                                            <!-- Modules -->
+                                            <div class="mb-3">
+                                                <h6 class="text-info">Modules</h6>
+                                                @if (course.Modules == null || !course.Modules.Any())
                                                 {
-                                                    <li class="list-group-item bg-dark text-muted">No lessons found yet.</li>
+                                                    <p class="text-muted">No modules found yet.</p>
                                                 }
                                                 else
                                                 {
-                                                    @foreach (var lesson in module.LessonDTOs)
-                                                    {
-                                                        <li class="list-group-item bg-dark text-light border-secondary">
-                                                            @lesson.Title
-                                                            <button class="btn btn-link btn-sm float-end text-info" onclick="showDetails('Lesson', '@lesson.Title', '@lesson.Content')">
-                                                                View Lesson Details
-                                                            </button>
-                                                        </li>
-                                                    }
+                                                    <ul class="list-group list-group-flush">
+                                                        @foreach (var module in course.Modules)
+                                                        {
+                                                            <li class="list-group-item bg-dark text-light border-secondary">
+                                                                <strong>@module.Title</strong>
+                                                                <button class="btn btn-link btn-sm float-end text-info hover-zoom" onclick="showDetails('Module', '@module.Title', 'Related to course: @course.Title')">
+                                                                    View Module Details
+                                                                </button>
+                                                            </li>
+                                                        }
+                                                    </ul>
                                                 }
-                                            </ul>
-                                        }
-                                    </ul>
-                                }
-                            </div>
+                                                <a asp-action="ManageModules" asp-route-courseId="@course.Id" class="btn btn-outline-warning btn-sm hover-zoom mt-2">Manage Modules</a>
+                                            </div>
 
-                            <!-- Quizzes Section -->
-                            <div class="mb-3">
-                                <h6 class="text-info">Quizzes</h6>
-                                @if (course.Quizzes == null || !course.Quizzes.Any())
-                                {
-                                    <p class="text-muted">No quizzes found yet.</p>
-                                }
-                                else
-                                {
-                                    <ul class="list-group list-group-flush">
-                                        @foreach (var quiz in course.Quizzes)
-                                        {
-                                            <li class="list-group-item bg-dark text-light border-secondary">
-                                                @quiz.Title
-                                                <button class="btn btn-link btn-sm float-end text-info" onclick="showDetails('Quiz', '@quiz.Title', 'Related to course: @course.Title')">
-                                                    View Quiz Details
-                                                </button>
-                                            </li>
-                                            <!-- Quiz Submissions -->
-                                            <ul class="list-group list-group-flush ms-3">
-                                                <h6 class="text-muted">Submissions</h6>
-                                                @if (quiz.QuizSubmissionDTOs == null || !quiz.QuizSubmissionDTOs.Any())
+                                            <!-- Quizzes -->
+                                            <div class="mb-3">
+                                                <h6 class="text-info">Quizzes</h6>
+                                                @if (course.Quizzes == null || !course.Quizzes.Any())
                                                 {
-                                                    <li class="list-group-item bg-dark text-muted">No submissions found yet.</li>
+                                                    <p class="text-muted">No quizzes found yet.</p>
                                                 }
                                                 else
                                                 {
-                                                    @foreach (var submission in quiz.QuizSubmissionDTOs)
-                                                    {
-                                                        <li class="list-group-item bg-dark text-light border-secondary">
-                                                            Submitted by: @submission.StudentDTO.UserName | Grade: @submission.Grade
-                                                            <button class="btn btn-link btn-sm float-end text-info" onclick="showDetails('Submission', 'Quiz by @submission.StudentDTO.UserName', 'Grade: @submission.Grade')">
-                                                                View Submission Details
-                                                            </button>
-                                                        </li>
-                                                    }
+                                                    <ul class="list-group list-group-flush">
+                                                        @foreach (var quiz in course.Quizzes)
+                                                        {
+                                                            <li class="list-group-item bg-dark text-light border-secondary">
+                                                                @quiz.Title
+                                                                <button class="btn btn-link btn-sm float-end text-info hover-zoom" onclick="showDetails('Quiz', '@quiz.Title', 'Related to course: @course.Title')">
+                                                                    View Quiz Details
+                                                                </button>
+                                                            </li>
+                                                        }
+                                                    </ul>
                                                 }
-                                            </ul>
-                                        }
-                                    </ul>
-                                }
-                            </div>
+                                                <a asp-action="ManageQuizzes" asp-route-courseId="@course.Id" class="btn btn-outline-warning btn-sm hover-zoom mt-2">Manage Quizzes</a>
+                                            </div>
 
-                            <!-- Enrollments Section -->
-                            <div class="mb-3">
-                                <h6 class="text-info">Enrollments</h6>
-                                @if (course.Enrollments == null || !course.Enrollments.Any())
-                                {
-                                    <p class="text-muted">No enrollments found yet.</p>
-                                }
-                                else
-                                {
-                                    <ul class="list-group list-group-flush">
-                                        @foreach (var enrollment in course.Enrollments)
-                                        {
-                                            <li class="list-group-item bg-dark text-light border-secondary">
-                                                Student: @enrollment.StudentDTO.UserName | Progress: @enrollment.ProgressPercentage%
-                                                <button class="btn btn-link btn-sm float-end text-info" onclick="showDetails('Enrollment', 'Student: @enrollment.StudentDTO.UserName', 'Progress: @enrollment.ProgressPercentage%')">
-                                                    View Enrollment Details
-                                                </button>
-                                            </li>
-                                        }
-                                    </ul>
-                                }
+                                            <!-- Enrollments -->
+                                            <div class="mb-3">
+                                                <h6 class="text-info">Enrollments</h6>
+                                                @if (course.Enrollments == null || !course.Enrollments.Any())
+                                                {
+                                                    <p class="text-muted">No enrollments found yet.</p>
+                                                }
+                                                else
+                                                {
+                                                    <ul class="list-group list-group-flush">
+                                                        @foreach (var enrollment in course.Enrollments)
+                                                        {
+                                                            <li class="list-group-item bg-dark text-light border-secondary">
+                                                                Student: @enrollment.StudentDTO.UserName | Progress: @enrollment.ProgressPercentage%
+                                                                <button class="btn btn-link btn-sm float-end text-info hover-zoom" onclick="showDetails('Enrollment', 'Student: @enrollment.StudentDTO.UserName', 'Progress: @enrollment.ProgressPercentage%')">
+                                                                    View Enrollment Details
+                                                                </button>
+                                                            </li>
+                                                        }
+                                                    </ul>
+                                                }
+                                                <a asp-action="ManageEnrollments" asp-route-courseId="@course.Id" class="btn btn-outline-warning btn-sm hover-zoom mt-2">Manage Enrollments</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
 
                             <!-- Details Button -->
                             <a asp-action="Details" asp-route-courseId="@course.Id" class="btn btn-outline-info mb-3 hover-zoom">Details</a>
-
-                            <!-- Manage Modules Button -->
-                            <a asp-action="ManageModules" asp-route-courseId="@course.Id" class="btn btn-outline-warning mb-3 hover-zoom">Manage Modules</a>
 
                             <!-- Update/Delete Buttons -->
                             <div class="d-flex justify-content-evenly">
@@ -164,7 +133,7 @@
 <script>
     function showDetails(type, title, content) {
         Swal.fire({
-            title: title,
+                title: title,
             text: content,
             icon: 'info',
             confirmButtonText: 'Close'
@@ -177,5 +146,9 @@
     .hover-zoom:hover {
         transform: scale(1.05);
         transition: transform 0.2s;
+    }
+
+    .accordion-button:not(.collapsed) {
+        background-color: #212529;
     }
 </style>

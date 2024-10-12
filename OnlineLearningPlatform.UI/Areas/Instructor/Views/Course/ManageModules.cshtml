@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<ModuleDTO>
 
 <div class="container">
-    <h2 class="text-light">Manage Modules for Course: @Model.FirstOrDefault()?.CourseDTO?.Title</h2>
+    <h2 class="text-light">Manage Modules for Course: @ViewBag.CourseTitle</h2>
 
     <!-- Button to create a new module -->
     <div class="d-flex justify-content-between mb-4">

@@ -105,9 +105,12 @@ namespace OnlineLearningPlatform.UI.Areas.Instructor.Controllers
         [HttpGet("ManageModules/{courseId}")]
         public async Task<IActionResult> ManageModules(int courseId)
         {
-            var courseModules = (await _courseService.GetModulesByCourseAsync(courseId)).Data;
+            var course = (await _courseService.GetCourseByIdAsync(courseId)).Data;
 
-            ViewBag.CourseId = courseId;
+            var courseModules = (await _courseService.GetModulesByCourseAsync(courseId)).Data;
+            
+            ViewBag.CourseId = course.Id;
+            ViewBag.CourseTitle = course.Title;
             return View(courseModules);
         }
         

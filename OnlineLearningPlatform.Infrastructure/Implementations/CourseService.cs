@@ -34,7 +34,7 @@ public class CourseService(IUnitOfWork unitOfWork, IMapper mapper) : ICourseServ
         {
             var course = await _unitOfWork.Course.GetAsync(
                 filter: c => c.Id.Equals(courseId),
-                includeProperties: "Instructor,Modules,Enrollments,Quizzes")
+                includeProperties: "Instructor,Modules.Lessons,Enrollments,Quizzes")
                 ?? throw new Exception("Course not found!");
 
             var mappedCourse = _mapper.Map<CourseDTO>(course);
