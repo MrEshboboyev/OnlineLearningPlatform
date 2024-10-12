@@ -130,6 +130,14 @@
 
                             <!-- Details Button -->
                             <a asp-action="Details" asp-route-courseId="@course.Id" class="btn btn-outline-info">Details</a>
+                            <div class="row">
+                                <div class="col-6 mx-auto">
+                                    <div class="d-flex align-items-center justify-content-evenly">
+                                        <a asp-action="Update" asp-route-courseId="@course.Id" class="btn btn-secondary">Update</a>
+                                        <a asp-action="Delete" asp-route-courseId="@course.Id" class="btn btn-danger">Delete</a>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -46,5 +46,55 @@ namespace OnlineLearningPlatform.UI.Areas.Instructor.Controllers
             TempData["error"] = $"Error : {result.Message}";
             return View(courseDTO);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Update(int courseId)
+        {
+            var course = (await _courseService.GetCourseByIdAsync(courseId)).Data;
+            return View(course);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Update(CourseDTO courseDTO)
+        {
+            // assign instructorId
+            courseDTO.InstructorId = GetUserId();
+
+            var result = await _courseService.UpdateCourseAsync(courseDTO);
+
+            if (result.Success)
+            {
+                TempData["success"] = "Course updated successfully!";
+                return RedirectToAction(nameof(Index));
+            }
+
+            TempData["error"] = $"Error : {result.Message}";
+            return View(courseDTO);
+        }
+        
+        [HttpGet]
+        public async Task<IActionResult> Delete(int courseId)
+        {
+            var course = (await _courseService.GetCourseByIdAsync(courseId)).Data;
+            return View(course);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(CourseDTO courseDTO)
+        {
+            // assign instructorId
+            courseDTO.InstructorId = GetUserId();
+
+            var result = await _courseService.DeleteCourseAsync(courseDTO);
+
+            if (result.Success)
+            {
+                TempData["success"] = "Course deleted successfully!";
+                return RedirectToAction(nameof(Index));
+            }
+
+            TempData["error"] = $"Error : {result.Message}";
+            return View(courseDTO);
+        }
     }
 }

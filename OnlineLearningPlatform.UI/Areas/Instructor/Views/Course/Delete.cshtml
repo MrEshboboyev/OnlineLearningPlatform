@@ -1,0 +1,40 @@
+﻿@model CourseDTO
+
+<div class="container">
+    <h2>Delete Course</h2>
+
+    <form asp-action="Delete" method="post">
+        <input asp-for="Id" hidden />
+        <!-- Course Title -->
+        <div class="form-group">
+            <label for="Title">Course Title</label>
+            <input disabled asp-for="@Model.Title" class="form-control" required />
+        </div>
+
+        <!-- Course Description -->
+        <div class="form-group">
+            <label for="Description">Course Description</label>
+            <textarea disabled asp-for="@Model.Description" class="form-control" rows="4" required>@Model.Description</textarea>
+        </div>
+
+        <!-- Course Category -->
+        <div class="form-group">
+            <label for="Category">Course Category</label>
+            <input disabled asp-for="@Model.Category" class="form-control" required />
+        </div>
+
+        <!-- Course Level -->
+        <div class="form-group">
+            <label for="Level">Course Level</label>
+            <select disabled class="form-control" asp-for="@Model.Level">
+                <option value="Beginner">Beginner</option>
+                <option value="Intermediate">Intermediate</option>
+                <option value="Advanced">Advanced</option>
+            </select>
+        </div>
+
+        <!-- Submit Button -->
+        <a asp-action="Index" class="btn btn-outline-secondary">Back to Courses</a>
+        <button type="submit" class="btn btn-danger">Delete Course</button>
+    </form>
+</div>

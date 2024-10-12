@@ -83,7 +83,7 @@ public class CourseService(IUnitOfWork unitOfWork, IMapper mapper) : ICourseServ
             await _unitOfWork.Course.UpdateAsync(courseFromDb);
             await _unitOfWork.SaveAsync();
 
-            return new ResponseDTO<object>(null);
+            return new ResponseDTO<object>(null, "Course updated!");
         }
         catch (Exception ex)
         {
@@ -102,7 +102,7 @@ public class CourseService(IUnitOfWork unitOfWork, IMapper mapper) : ICourseServ
             await _unitOfWork.Course.RemoveAsync(courseFromDb);
             await _unitOfWork.SaveAsync();
 
-            return new ResponseDTO<object>(null);
+            return new ResponseDTO<object>(null, "Course deleted!");
         }
         catch (Exception ex)
         {

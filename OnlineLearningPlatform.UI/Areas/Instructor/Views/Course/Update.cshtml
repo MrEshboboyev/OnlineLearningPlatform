@@ -1,0 +1,43 @@
+﻿@model CourseDTO
+
+<div class="container">
+    <h2>Update Course</h2>
+
+    <form asp-action="Update" method="post">
+        <input asp-for="Id" hidden/>
+        <!-- Course Title -->
+        <div class="form-group">
+            <label for="Title">Course Title</label>
+            <input asp-for="@Model.Title" class="form-control" required />
+            <span asp-validation-for="@Model.Title" class="text-danger"></span>
+        </div>
+
+        <!-- Course Description -->
+        <div class="form-group">
+            <label for="Description">Course Description</label>
+            <textarea asp-for="@Model.Description" class="form-control" rows="4" required>@Model.Description</textarea>
+            <span asp-validation-for="@Model.Description" class="text-danger"></span>
+        </div>
+
+        <!-- Course Category -->
+        <div class="form-group">
+            <label for="Category">Course Category</label>
+            <input asp-for="@Model.Category" class="form-control" required />
+            <span asp-validation-for="@Model.Category" class="text-danger"></span>
+        </div>
+
+        <!-- Course Level -->
+        <div class="form-group">
+            <label for="Level">Course Level</label>
+            <select class="form-control" asp-for="@Model.Level">
+                <option value="Beginner">Beginner</option>
+                <option value="Intermediate">Intermediate</option>
+                <option value="Advanced">Advanced</option>
+            </select>
+        </div>
+
+        <!-- Submit Button -->
+        <a asp-action="Index" class="btn btn-outline-secondary">Back to Courses</a>
+        <button type="submit" class="btn btn-primary">Update Course</button>
+    </form>
+</div>
