@@ -75,7 +75,7 @@
 
                             <!-- Unenroll User Button -->
                             <div class="text-end mt-4">
-                                <form asp-action="UnenrollUser" asp-route-enrollmentId="@enrollment.Id" method="post">
+                                <form asp-action="RemoveEnrollment" asp-route-studentId="@enrollment.StudentId" asp-route-courseId="@enrollment.CourseId" method="post">
                                     <button type="submit" class="btn btn-danger">Unenroll this User</button>
                                 </form>
                             </div>

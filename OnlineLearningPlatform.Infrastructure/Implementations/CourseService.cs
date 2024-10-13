@@ -255,7 +255,7 @@ public class CourseService(IUnitOfWork unitOfWork, IMapper mapper) : ICourseServ
             await _unitOfWork.Enrollment.RemoveAsync(enrollmentFromDb);
             await _unitOfWork.SaveAsync();
 
-            return new ResponseDTO<object>(null);
+            return new ResponseDTO<object>(null, "Unenroll student from course!");
         }
         catch (Exception ex)
         {

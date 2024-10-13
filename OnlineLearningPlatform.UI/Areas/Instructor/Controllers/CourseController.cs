@@ -18,6 +18,7 @@ namespace OnlineLearningPlatform.UI.Areas.Instructor.Controllers
         private readonly IModuleService _moduleService = moduleService;
         private readonly ILessonService _lessonService = lessonService;
 
+        #region Course Management
         public async Task<IActionResult> Index()
         {
             var allCourses = (await _courseService.GetCoursesByInstructorAsync(GetUserId())).Data;
@@ -101,7 +102,9 @@ namespace OnlineLearningPlatform.UI.Areas.Instructor.Controllers
             TempData["error"] = $"Error : {result.Message}";
             return View(courseDTO);
         }
+        #endregion
 
+        #region Course-Module management
         [HttpGet("ManageModules/{courseId}")]
         public async Task<IActionResult> ManageModules(int courseId)
         {
@@ -163,7 +166,9 @@ namespace OnlineLearningPlatform.UI.Areas.Instructor.Controllers
             TempData["error"] = $"Error : {result.Message}";
             return View(moduleDTO);
         }
+        #endregion
 
+        #region Module-Lesson management
         [HttpGet("ManageLessons/{moduleId}")]
         public async Task<IActionResult> ManageLessons(int moduleId)
         {
@@ -225,12 +230,32 @@ namespace OnlineLearningPlatform.UI.Areas.Instructor.Controllers
             TempData["error"] = $"Error : {result.Message}";
             return View(lessonDTO);
         }
+        #endregion
 
+        #region Course-Enrollment management
         [HttpGet("Enrollments/{courseId}")]
         public async Task<IActionResult> Enrollments(int courseId)
         {
             var courseEnrollments = (await _courseService.GetEnrollmentsByCourseAsync(courseId)).Data;
             return View(courseEnrollments);
         }
+
+        [HttpPost("RemoveEnrollment/{courseId}/{studentId}")]
+        public async Task<IActionResult> RemoveEnrollment(int courseId, string studentId)
+        {
+            var result = await _courseService.UnenrollUserFromCourseAsync(courseId, studentId);
+
+            if (result.Success)
+            {
+                TempData["success"] = "Student unenrolled from course successfully!";
+            }
+            else
+            {
+                TempData["error"] = $"Error : {result.Message}";
+            }
+
+            return RedirectToAction(nameof(Enrollments), new { courseId });
+        }
+        #endregion
     }
 }
