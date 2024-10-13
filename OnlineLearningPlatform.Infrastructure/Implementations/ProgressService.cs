@@ -56,6 +56,23 @@ public class ProgressService(IUnitOfWork unitOfWork, IMapper mapper) : IProgress
             return new ResponseDTO<IEnumerable<ProgressDTO>>(ex.Message);
         }
     }
+    public async Task<ResponseDTO<IEnumerable<ProgressDTO>>> GetProgressesInCourseAsync(int courseId)
+    {
+        try
+        {
+            var courseProgresses = await _unitOfWork.Progress.GetAllAsync(
+                filter: p => p.Lesson.Module.CourseId.Equals(courseId),
+                includeProperties: "Student,Lesson.Module.Course");
+
+            var mappedProgresses = _mapper.Map<IEnumerable<ProgressDTO>>(courseProgresses);
+
+            return new ResponseDTO<IEnumerable<ProgressDTO>>(mappedProgresses);
+        }
+        catch (Exception ex)
+        {
+            return new ResponseDTO<IEnumerable<ProgressDTO>>(ex.Message);
+        }
+    }
     public async Task<ResponseDTO<double>> GetOverallProgressInCourseAsync(string studentId, int courseId)
     {
         try

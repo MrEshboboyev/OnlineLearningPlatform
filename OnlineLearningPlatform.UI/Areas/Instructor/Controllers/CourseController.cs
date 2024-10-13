@@ -12,11 +12,13 @@ namespace OnlineLearningPlatform.UI.Areas.Instructor.Controllers
     [Route($"{SD.Role_Instructor}/Course")]
     public class CourseController(ICourseService courseService, 
         IModuleService moduleService, 
-        ILessonService lessonService) : BaseController
+        ILessonService lessonService,
+        IProgressService progressService) : BaseController
     {
         private readonly ICourseService _courseService = courseService;
         private readonly IModuleService _moduleService = moduleService;
         private readonly ILessonService _lessonService = lessonService;
+        private readonly IProgressService _progressService = progressService;
 
         #region Course Management
         public async Task<IActionResult> Index()
@@ -255,6 +257,23 @@ namespace OnlineLearningPlatform.UI.Areas.Instructor.Controllers
             }
 
             return RedirectToAction(nameof(Enrollments), new { courseId });
+        }
+        #endregion
+
+        #region Course-Student Progress management
+        [HttpGet("StudentProgress/{courseId}")]
+        public async Task<IActionResult> StudentProgress(int courseId)
+        {
+            var courseProgresses = (await _progressService.GetProgressesInCourseAsync(courseId)).Data;
+            return View(courseProgresses);
+        }
+
+        [HttpGet("StudentProgressDetails/{courseId}/{studentId}")]
+        public async Task<IActionResult> StudentProgressDetails(int courseId, string studentId)
+        {
+            var studentProgressInCourse = (await _progressService.
+                GetStudentProgressInCourseAsync(studentId, courseId)).Data;
+            return View(studentProgressInCourse);
         }
         #endregion
     }

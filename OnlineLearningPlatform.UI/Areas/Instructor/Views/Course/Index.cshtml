@@ -23,9 +23,12 @@
                             <p class="text-muted">Level: @course.Level</p>
 
                             <!-- Button to show course details -->
-                            <button class="btn btn-primary mb-3 hover-zoom" onclick="showDetails('Course', '@course.Title', '@course.Description')">
+                            <button class="btn btn-secondary mb-3 hover-zoom" onclick="showDetails('Course', '@course.Title', '@course.Description')">
                                 View Course Details
                             </button>
+                            <a asp-action="StudentProgress" asp-route-courseId="@course.Id" class="btn btn-outline-primary mb-3 hover-zoom" >
+                                Student Progress
+                            </a>
 
                             <!-- Course Management Section -->
                             <div class="accordion" id="courseAccordion-@course.Id">

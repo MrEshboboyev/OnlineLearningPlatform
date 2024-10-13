@@ -1,0 +1,58 @@
+﻿@model IEnumerable<ProgressDTO>
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4 text-light">Progress Details for @Model.First().StudentDTO.UserName</h2>
+
+    <div class="accordion" id="moduleAccordion">
+        @if (!Model.Any())
+        {
+            <div class="alert alert-warning text-center" role="alert">
+                No progress data available for this student.
+            </div>
+        }
+        else
+        {
+            var modules = Model.GroupBy(p => p.LessonDTO.ModuleDTO);
+            foreach (var moduleGroup in modules)
+            {
+                var module = moduleGroup.Key;
+                <div class="accordion-item bg-dark border-light shadow-sm mb-3">
+                    <h2 class="accordion-header" id="heading-module-@module.Id">
+                        <button class="accordion-button collapsed text-light bg-secondary" type="button"
+                                data-bs-toggle="collapse" data-bs-target="#collapse-module-@module.Id"
+                                aria-expanded="false" aria-controls="collapse-module-@module.Id">
+                            @module.Title
+                        </button>
+                    </h2>
+                    <div id="collapse-module-@module.Id" class="accordion-collapse collapse"
+                         aria-labelledby="heading-module-@module.Id" data-bs-parent="#moduleAccordion">
+                        <div class="accordion-body text-light">
+                            <ul class="list-group list-group-flush">
+                                @foreach (var progress in moduleGroup)
+                                {
+                                    <li class="list-group-item bg-dark text-light d-flex justify-content-between">
+                                        <span>@progress.LessonDTO.Title</span>
+                                        @if (progress.IsCompleted)
+                                        {
+                                            <span class="badge bg-success">Completed on @progress.CompletionDate.ToShortDateString()</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-danger">Incomplete</span>
+                                        }
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+
+    <div class="text-end mt-4">
+        <a asp-action="StudentProgress" asp-route-courseId="@ViewBag.CourseId" class="btn btn-outline-primary">
+            Back to Course Progress
+        </a>
+    </div>
+</div>

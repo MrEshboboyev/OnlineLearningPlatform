@@ -114,6 +114,8 @@ namespace OnlineLearningPlatform.Application.Mappings
 
             // Progress -> ProgressDTO
             CreateMap<Progress, ProgressDTO>()
+                .ForMember(dest => dest.StudentDTO, opt => opt.MapFrom(src => src.Student))
+                .ForMember(dest => dest.LessonDTO, opt => opt.MapFrom(src => src.Lesson))
                 .ReverseMap()
                     .ForMember(dest => dest.Student, opt => opt.Ignore())
                     .ForMember(dest => dest.Lesson, opt => opt.Ignore());

@@ -7,6 +7,7 @@ public interface IProgressService
     #region Progress Tracking
     Task<ResponseDTO<ProgressDTO>> GetStudentProgressInLessonAsync(string studentId, int lessonId);
     Task<ResponseDTO<IEnumerable<ProgressDTO>>> GetStudentProgressInCourseAsync(string studentId, int courseId);
+    Task<ResponseDTO<IEnumerable<ProgressDTO>>> GetProgressesInCourseAsync(int courseId);
     Task<ResponseDTO<double>> GetOverallProgressInCourseAsync(string studentId, int courseId);
     #endregion
 

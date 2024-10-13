@@ -218,15 +218,14 @@ public class CourseService(IUnitOfWork unitOfWork, IMapper mapper) : ICourseServ
     {
         try
         {
+            // Check if the student is already enrolled
             var existEnrollment = await _unitOfWork.Enrollment.AnyAsync(
                 e => e.CourseId.Equals(courseId) && e.StudentId.Equals(userId));
 
             if (existEnrollment)
                 throw new Exception("Student already enrolled for this course!");
 
-            // is not enrolled yet
-
-            // prepare enrollment
+            // Prepare the enrollment
             Enrollment enrollmentForDb = new()
             {
                 CourseId = courseId,
@@ -235,9 +234,39 @@ public class CourseService(IUnitOfWork unitOfWork, IMapper mapper) : ICourseServ
             };
 
             await _unitOfWork.Enrollment.AddAsync(enrollmentForDb);
+
+            // Get the list of lessons in the course
+            var course = await _unitOfWork.Course.GetAsync(
+                filter: c => c.Id.Equals(courseId),
+                includeProperties: "Modules.Lessons");
+
+            if (course?.Modules == null || course.Modules.Count == 0)
+                throw new Exception("No modules or lessons found for this course.");
+
+            // Prepare and create Progress records for each lesson
+            foreach (var module in course.Modules)
+            {
+                if (module.Lessons != null && module.Lessons.Count != 0)
+                {
+                    foreach (var lesson in module.Lessons)
+                    {
+                        Progress progressForDb = new()
+                        {
+                            StudentId = userId,
+                            LessonId = lesson.Id,
+                            IsCompleted = false,
+                            CompletionDate = DateTime.MinValue // Default, since it's not completed yet
+                        };
+
+                        await _unitOfWork.Progress.AddAsync(progressForDb);
+                    }
+                }
+            }
+
+            // Save the enrollment and progress records
             await _unitOfWork.SaveAsync();
 
-            return new ResponseDTO<object>(null, "Student enrolled to this course!");
+            return new ResponseDTO<object>(null, "Student successfully enrolled in the course, progress initialized.");
         }
         catch (Exception ex)
         {
