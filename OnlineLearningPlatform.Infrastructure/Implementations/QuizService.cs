@@ -73,7 +73,7 @@ public class QuizService(IUnitOfWork unitOfWork, IMapper mapper) : IQuizService
             await _unitOfWork.Quiz.AddAsync(quizForDb);
             await _unitOfWork.SaveAsync();
 
-            return new ResponseDTO<object>(null);
+            return new ResponseDTO<object>(null, "Quiz created!");
         }
         catch (Exception ex)
         {
@@ -85,7 +85,7 @@ public class QuizService(IUnitOfWork unitOfWork, IMapper mapper) : IQuizService
         try
         {
             var quizFromDb = await _unitOfWork.Quiz.GetAsync(
-                q => q.Id.Equals(quizDTO)
+                q => q.Id.Equals(quizDTO.Id)
                 ) ?? throw new Exception("Quiz not found!");
 
             // mapping quiz
@@ -94,7 +94,7 @@ public class QuizService(IUnitOfWork unitOfWork, IMapper mapper) : IQuizService
             await _unitOfWork.Quiz.UpdateAsync(quizFromDb);
             await _unitOfWork.SaveAsync();
 
-            return new ResponseDTO<object>(null);
+            return new ResponseDTO<object>(null, "Quiz updated!");
         }
         catch (Exception ex)
         {
@@ -112,7 +112,7 @@ public class QuizService(IUnitOfWork unitOfWork, IMapper mapper) : IQuizService
             await _unitOfWork.Quiz.RemoveAsync(quizFromDb);
             await _unitOfWork.SaveAsync();
 
-            return new ResponseDTO<object>(null);
+            return new ResponseDTO<object>(null, "Quiz deleted!");
         }
         catch (Exception ex)
         {
@@ -279,7 +279,7 @@ public class QuizService(IUnitOfWork unitOfWork, IMapper mapper) : IQuizService
             await _unitOfWork.QuizSubmission.UpdateAsync(quizSubmission);
             await _unitOfWork.SaveAsync();
 
-            return new ResponseDTO<object>(null);
+            return new ResponseDTO<object>(null, "Quiz Submission graded!");
         }
         catch (Exception ex)
         {

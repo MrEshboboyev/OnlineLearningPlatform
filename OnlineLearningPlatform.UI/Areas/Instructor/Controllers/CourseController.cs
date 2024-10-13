@@ -10,15 +10,19 @@ namespace OnlineLearningPlatform.UI.Areas.Instructor.Controllers
     [Area(SD.Role_Instructor)]
     [Authorize(Roles = SD.Role_Instructor)]
     [Route($"{SD.Role_Instructor}/Course")]
-    public class CourseController(ICourseService courseService, 
-        IModuleService moduleService, 
+    public class CourseController(ICourseService courseService,
+        IModuleService moduleService,
         ILessonService lessonService,
-        IProgressService progressService) : BaseController
+        IProgressService progressService,
+        IQuizService quizService,
+        IQuizSubmissionService quizSubmissionService) : BaseController
     {
         private readonly ICourseService _courseService = courseService;
         private readonly IModuleService _moduleService = moduleService;
         private readonly ILessonService _lessonService = lessonService;
         private readonly IProgressService _progressService = progressService;
+        private readonly IQuizService _quizService = quizService;
+        private readonly IQuizSubmissionService _quizSubmissionService = quizSubmissionService;
 
         #region Course Management
         public async Task<IActionResult> Index()
@@ -33,7 +37,7 @@ namespace OnlineLearningPlatform.UI.Areas.Instructor.Controllers
             var course = (await _courseService.GetCourseByIdAsync(courseId)).Data;
             return View(course);
         }
-        
+
         [HttpGet("Create")]
         public IActionResult Create() => View(new CourseDTO());
 
@@ -79,7 +83,7 @@ namespace OnlineLearningPlatform.UI.Areas.Instructor.Controllers
             TempData["error"] = $"Error : {result.Message}";
             return View(courseDTO);
         }
-        
+
         [HttpGet("Delete/{courseId}")]
         public async Task<IActionResult> Delete(int courseId)
         {
@@ -113,12 +117,12 @@ namespace OnlineLearningPlatform.UI.Areas.Instructor.Controllers
             var course = (await _courseService.GetCourseByIdAsync(courseId)).Data;
 
             var courseModules = (await _courseService.GetModulesByCourseAsync(courseId)).Data;
-            
+
             ViewBag.CourseId = course.Id;
             ViewBag.CourseTitle = course.Title;
             return View(courseModules);
         }
-        
+
         [HttpGet("CreateModule/{courseId}")]
         public async Task<IActionResult> CreateModule(int courseId)
         {
@@ -131,7 +135,7 @@ namespace OnlineLearningPlatform.UI.Areas.Instructor.Controllers
 
             return View(moduleDTO);
         }
-        
+
         [HttpPost("CreateModule/{courseId}")]
         public async Task<IActionResult> CreateModule(ModuleDTO moduleDTO)
         {
@@ -153,12 +157,12 @@ namespace OnlineLearningPlatform.UI.Areas.Instructor.Controllers
             var module = (await _moduleService.GetModuleByIdAsync(moduleId)).Data;
             return View(module);
         }
-        
+
         [HttpPost("EditModule/{moduleId}")]
         public async Task<IActionResult> EditModule(ModuleDTO moduleDTO)
         {
             var result = await _moduleService.UpdateModuleAsync(moduleDTO);
-            
+
             if (result.Success)
             {
                 TempData["success"] = "Module updated successfully!";
@@ -182,7 +186,7 @@ namespace OnlineLearningPlatform.UI.Areas.Instructor.Controllers
             ViewBag.ModuleTitle = module.Title;
             return View(moduleLessons);
         }
-        
+
         [HttpGet("CreateLesson/{moduleId}")]
         public async Task<IActionResult> CreateLesson(int moduleId)
         {
@@ -195,7 +199,7 @@ namespace OnlineLearningPlatform.UI.Areas.Instructor.Controllers
 
             return View(lessonDTO);
         }
-        
+
         [HttpPost("CreateLesson/{moduleId}")]
         public async Task<IActionResult> CreateLesson(int moduleId, LessonDTO lessonDTO)
         {
@@ -274,6 +278,106 @@ namespace OnlineLearningPlatform.UI.Areas.Instructor.Controllers
             var studentProgressInCourse = (await _progressService.
                 GetStudentProgressInCourseAsync(studentId, courseId)).Data;
             return View(studentProgressInCourse);
+        }
+        #endregion
+
+        #region Course-Quiz management
+        [HttpGet("ManageQuizzes/{courseId}")]
+        public async Task<IActionResult> ManageQuizzes(int courseId)
+        {
+            var courseQuizzes = (await _quizService.GetQuizzesByCourseIdAsync(courseId)).Data;
+
+            ViewBag.CourseId = courseId;
+            return View(courseQuizzes);
+        }
+
+        [HttpGet("QuizDetails/{quizId}")]
+        public async Task<IActionResult> QuizDetails(int quizId)
+        {
+            var quiz = (await _quizService.GetQuizByIdAsync(quizId)).Data;
+            return View(quiz);
+        }
+
+
+        [HttpGet("CreateQuiz/{courseId}")]
+        public async Task<IActionResult> CreateQuiz(int courseId)
+        {
+            var course = (await _courseService.GetCourseByIdAsync(courseId)).Data;
+
+            ViewBag.CourseTitle = course.Title;
+            ViewBag.CourseId = courseId;
+
+            return View();
+        }
+
+        [HttpPost("CreateQuiz/{courseId}")]
+        public async Task<IActionResult> CreateQuiz(QuizDTO quizDTO)
+        {
+            var result = await _quizService.CreateQuizAsync(quizDTO);
+
+            if (result.Success)
+            {
+                TempData["success"] = "Quiz created successfully!";
+                return RedirectToAction(nameof(ManageQuizzes), new { courseId = quizDTO.CourseId });
+            }
+
+            TempData["error"] = $"Error : {result.Message}";
+            return RedirectToAction(nameof(CreateQuiz), new { courseId = quizDTO.CourseId });
+        }
+
+        [HttpGet("EditQuiz/{quizId}")]
+        public async Task<IActionResult> EditQuiz(int quizId)
+        {
+            var quiz = (await _quizService.GetQuizByIdAsync(quizId)).Data;
+            return View(quiz);
+        }
+
+        [HttpPost("EditQuiz/{quizId}")]
+        public async Task<IActionResult> EditQuiz(QuizDTO quizDTO)
+        {
+            var result = await _quizService.UpdateQuizAsync(quizDTO);
+
+            if (result.Success)
+            {
+                TempData["success"] = "Quiz updated successfully!";
+                return RedirectToAction(nameof(ManageQuizzes), new { courseId = quizDTO.CourseId });
+            }
+
+            TempData["error"] = $"Error : {result.Message}";
+            return RedirectToAction(nameof(EditQuiz), new { quizId = quizDTO.Id });
+        }
+
+        [HttpGet("QuizSubmissions/{quizId}")]
+        public async Task<IActionResult> QuizSubmissions(int quizId)
+        {
+            var quizSubmissions = (await _quizService.GetSubmissionsByQuizAsync(quizId)).Data;
+
+            ViewBag.QuizId = quizId;
+            return View(quizSubmissions);
+        }
+
+        [HttpGet("GradeQuiz/{submissionId}")]
+        public async Task<IActionResult> GradeQuiz(int submissionId)
+        {
+            var submission = (await _quizSubmissionService.GetQuizSubmissionByIdAsync(submissionId)).Data;
+            return View(submission);
+        }
+
+        [HttpPost("GradeQuiz/{submissionId}")]
+        public async Task<IActionResult> GradeQuiz(int submissionId, int grade)
+        {
+            var quizSubmission = (await _quizSubmissionService.GetQuizSubmissionByIdAsync(submissionId)).Data;
+            
+            var result = await _quizService.GradeQuizSubmissionAsync(submissionId, grade);
+
+            if (result.Success)
+            {
+                TempData["success"] = "Quiz submission graded successfully!";
+                return RedirectToAction(nameof(QuizSubmissions), new { quizId = quizSubmission.QuizId });
+            }
+
+            TempData["error"] = $"Error : {result.Message}";
+            return View(quizSubmission);
         }
         #endregion
     }

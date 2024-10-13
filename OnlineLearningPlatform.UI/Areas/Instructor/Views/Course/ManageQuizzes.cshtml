@@ -1,0 +1,53 @@
+﻿@model IEnumerable<QuizDTO>
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4 text-primary">Manage Quizzes</h2>
+
+    <!-- Button to create a new quiz -->
+    <div class="text-end mb-4">
+        <a asp-action="CreateQuiz" asp-route-courseId="@ViewBag.CourseId" class="btn btn-success">
+            <i class="bi bi-plus-circle"></i> Create New Quiz
+        </a>
+    </div>
+
+    @if (Model == null || !Model.Any())
+    {
+        <div class="alert alert-warning text-center" role="alert">
+            No quizzes available for this course.
+        </div>
+    }
+    else
+    {
+        <div class="accordion" id="quizAccordion">
+            @foreach (var quiz in Model)
+            {
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="heading-@quiz.Id">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-@quiz.Id" aria-expanded="false" aria-controls="collapse-@quiz.Id">
+                            @quiz.Title
+                        </button>
+                    </h2>
+                    <div id="collapse-@quiz.Id" class="accordion-collapse collapse" aria-labelledby="heading-@quiz.Id" data-bs-parent="#quizAccordion">
+                        <div class="accordion-body">
+                            <p><strong>Quiz ID:</strong> @quiz.Id</p>
+                            <p><strong>Questions:</strong> @quiz.QuestionDTOs.Count()</p>
+                            <p>
+                                <a asp-action="QuizSubmissions" asp-route-quizId="@quiz.Id">
+                                    <strong>Submissions:</strong> @quiz.QuizSubmissionDTOs.Count()
+                                </a>
+                            </p>
+                            
+
+                            <a asp-action="QuizDetails" asp-route-quizId="@quiz.Id" class="btn btn-primary">
+                                <i class="bi bi-eye"></i> Details
+                            </a>
+                            <a asp-action="EditQuiz" asp-route-quizId="@quiz.Id" class="btn btn-warning">
+                                <i class="bi bi-pencil"></i> Edit
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

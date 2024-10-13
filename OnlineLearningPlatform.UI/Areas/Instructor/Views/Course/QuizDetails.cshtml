@@ -1,0 +1,39 @@
+﻿@model QuizDTO
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4 text-info">Quiz Details: @Model.Title</h2>
+
+    <p><strong>Quiz ID:</strong> @Model.Id</p>
+    <p><strong>Number of Questions:</strong> @Model.QuestionDTOs.Count()</p>
+
+    <h4 class="mt-4">Questions</h4>
+    <div class="accordion" id="questionsAccordion">
+        @foreach (var question in Model.QuestionDTOs)
+        {
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="question-@question.Id">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-question-@question.Id" aria-expanded="false" aria-controls="collapse-question-@question.Id">
+                        @question.QuestionText
+                    </button>
+                </h2>
+                <div id="collapse-question-@question.Id" class="accordion-collapse collapse" aria-labelledby="question-@question.Id" data-bs-parent="#questionsAccordion">
+                    <div class="accordion-body">
+                        <p><strong>Question Type:</strong> @question.QuestionType</p>
+                        <ul class="list-group">
+                            @foreach (var answer in question.AnswerDTOs)
+                            {
+                                <li class="list-group-item d-flex justify-content-between">
+                                    @answer.AnswerText
+                                    @if (answer.IsCorrect)
+                                    {
+                                        <span class="badge bg-success">Correct</span>
+                                    }
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

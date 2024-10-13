@@ -78,6 +78,9 @@ namespace OnlineLearningPlatform.Application.Mappings
 
             // Quiz -> QuizDTO
             CreateMap<Quiz, QuizDTO>()
+                .ForMember(dest => dest.QuestionDTOs, opt => opt.MapFrom(quiz => quiz.Questions))
+                .ForMember(dest => dest.CourseDTO, opt => opt.MapFrom(quiz => quiz.Course))
+                .ForMember(dest => dest.QuizSubmissionDTOs, opt => opt.MapFrom(quiz => quiz.QuizSubmissions))
                 .ReverseMap()
                     .ForMember(dest => dest.Course, opt => opt.Ignore())
                     .ForMember(dest => dest.Questions, opt => opt.Ignore())
@@ -105,6 +108,7 @@ namespace OnlineLearningPlatform.Application.Mappings
 
             // QuizSubmission -> QuizSubmissionDTO
             CreateMap<QuizSubmission, QuizSubmissionDTO>()
+                .ForMember(dest => dest.QuizDTO, opt => opt.MapFrom(src => src.Quiz))
                 .ReverseMap()
                     .ForMember(dest => dest.Student, opt => opt.Ignore())
                     .ForMember(dest => dest.Quiz, opt => opt.Ignore());

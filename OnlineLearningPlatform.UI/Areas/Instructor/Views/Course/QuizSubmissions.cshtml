@@ -1,0 +1,42 @@
+﻿@model IEnumerable<QuizSubmissionDTO>
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4 text-info">Quiz Submissions for Quiz #@ViewBag.QuizId</h2>
+
+    @if (Model == null || !Model.Any())
+    {
+        <div class="alert alert-warning text-center" role="alert">
+            No submissions for this quiz.
+        </div>
+    }
+    else
+    {
+        <table class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>Submission ID</th>
+                    <th>Student</th>
+                    <th>Submission Date</th>
+                    <th>Grade</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var submission in Model)
+                {
+                    <tr>
+                        <td>@submission.Id</td>
+                        <td>@submission.StudentDTO.UserName</td>
+                        <td>@submission.SubmissionDate.ToShortDateString()</td>
+                        <td>@submission.Grade</td>
+                        <td>
+                            <a asp-action="GradeQuiz" asp-route-submissionId="@submission.Id" class="btn btn-primary">
+                                <i class="bi bi-check-circle"></i> Grade
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>

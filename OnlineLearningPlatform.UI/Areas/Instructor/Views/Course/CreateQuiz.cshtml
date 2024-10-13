@@ -1,0 +1,18 @@
+﻿@model QuizDTO
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4 text-success">Create Quiz for @ViewBag.CourseTitle</h2>
+
+    <form asp-action="CreateQuiz" method="post">
+        <input type="hidden" name="CourseId" value="@ViewBag.CourseId" />
+
+        <div class="mb-3">
+            <label for="quizTitle" class="form-label">Quiz Title</label>
+            <input type="text" class="form-control" id="quizTitle" name="Title" required>
+        </div>
+
+        <div class="mb-3 text-end">
+            <button type="submit" class="btn btn-primary">Create Quiz</button>
+        </div>
+    </form>
+</div>
