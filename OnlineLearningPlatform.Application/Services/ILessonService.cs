@@ -7,6 +7,7 @@ public interface ILessonService
     #region Lesson Management
     Task<ResponseDTO<IEnumerable<LessonDTO>>> GetAllLessonsAsync();
     Task<ResponseDTO<IEnumerable<LessonDTO>>> GetLessonsByModuleAsync(int moduleId);
+    Task<ResponseDTO<IEnumerable<LessonDTO>>> GetLessonsByInstructorAsync(string instructorId);
     Task<ResponseDTO<LessonDTO>> GetLessonByIdAsync(int lessonId);
 
     // POST actions

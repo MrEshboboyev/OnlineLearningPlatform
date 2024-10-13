@@ -29,6 +29,7 @@
             <a asp-area="@SD.Role_Instructor" asp-controller="Course" asp-action="Create" class="text-white mb-2"><i class="bi bi-book"></i> Create Course</a>
             <a asp-area="@SD.Role_Instructor" asp-controller="Quiz" asp-action="Index" class="text-white mb-2"><i class="bi bi-question-circle"></i> My Quizzes</a>
             <a asp-area="@SD.Role_Instructor" asp-controller="Module" asp-action="Index" class="text-white mb-2"><i class="bi bi-columns-gap"></i> My Modules</a>
+            <a asp-area="@SD.Role_Instructor" asp-controller="Lesson" asp-action="Index" class="text-white mb-2"><i class="bi bi-file-text"></i> My Lessons</a>
         }
         
         @if (User.IsInRole(SD.Role_Student))
