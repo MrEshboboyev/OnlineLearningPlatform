@@ -45,6 +45,23 @@ public class QuizService(IUnitOfWork unitOfWork, IMapper mapper) : IQuizService
             return new ResponseDTO<IEnumerable<QuizDTO>>(ex.Message);
         }
     }
+    public async Task<ResponseDTO<IEnumerable<QuizDTO>>> GetQuizzesByInstructorAsync(string instructorId)
+    {
+        try
+        {
+            var instructorQuizzes = await _unitOfWork.Quiz.GetAllAsync(
+                filter: q => q.Course.InstructorId.Equals(instructorId),
+                includeProperties: "Course,Questions,QuizSubmissions");
+
+            var mappedQuizzes = _mapper.Map<IEnumerable<QuizDTO>>(instructorQuizzes);
+
+            return new ResponseDTO<IEnumerable<QuizDTO>>(mappedQuizzes);
+        }
+        catch (Exception ex)
+        {
+            return new ResponseDTO<IEnumerable<QuizDTO>>(ex.Message);
+        }
+    }
     public async Task<ResponseDTO<QuizDTO>> GetQuizByIdAsync(int quizId)
     {
         try

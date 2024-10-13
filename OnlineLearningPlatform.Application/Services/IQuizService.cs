@@ -7,6 +7,7 @@ public interface IQuizService
     #region Quiz Management
     Task<ResponseDTO<IEnumerable<QuizDTO>>> GetAllQuizzesAsync();
     Task<ResponseDTO<IEnumerable<QuizDTO>>> GetQuizzesByCourseIdAsync(int courseId);
+    Task<ResponseDTO<IEnumerable<QuizDTO>>> GetQuizzesByInstructorAsync(string instructorId);
     Task<ResponseDTO<QuizDTO>> GetQuizByIdAsync(int quizId);
 
     // POST actions
