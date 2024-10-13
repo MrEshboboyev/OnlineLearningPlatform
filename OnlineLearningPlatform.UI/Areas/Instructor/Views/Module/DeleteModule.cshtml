@@ -1,0 +1,19 @@
+﻿@model ModuleDTO
+
+<div class="container">
+    <h2 class="text-bg-danger">Delete Module: @Model.Title</h2>
+
+    <form asp-action="DeleteModule" asp-route-moduleId="@Model.Id" method="post" class="bg-dark p-4 rounded">
+        @Html.AntiForgeryToken()
+
+        <input asp-for="Id" hidden />
+        <input asp-for="CourseId" hidden />
+        <div class="mb-3">
+            <label for="Title" class="form-label text-light">Module Title</label>
+            <input disabled asp-for="Title" class="form-control bg-secondary text-light" />
+        </div>
+
+        <button type="submit" class="btn btn-danger">Delete Module</button>
+        <a asp-action="ManageModules" asp-route-courseId="@Model.CourseId" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>

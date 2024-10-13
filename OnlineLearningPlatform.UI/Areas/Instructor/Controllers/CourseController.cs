@@ -13,16 +13,12 @@ namespace OnlineLearningPlatform.UI.Areas.Instructor.Controllers
     public class CourseController(ICourseService courseService,
         IModuleService moduleService,
         ILessonService lessonService,
-        IProgressService progressService,
-        IQuizService quizService,
-        IQuizSubmissionService quizSubmissionService) : BaseController
+        IProgressService progressService) : BaseController
     {
         private readonly ICourseService _courseService = courseService;
         private readonly IModuleService _moduleService = moduleService;
         private readonly ILessonService _lessonService = lessonService;
         private readonly IProgressService _progressService = progressService;
-        private readonly IQuizService _quizService = quizService;
-        private readonly IQuizSubmissionService _quizSubmissionService = quizSubmissionService;
 
         #region Course Management
         public async Task<IActionResult> Index()
@@ -107,70 +103,6 @@ namespace OnlineLearningPlatform.UI.Areas.Instructor.Controllers
 
             TempData["error"] = $"Error : {result.Message}";
             return View(courseDTO);
-        }
-        #endregion
-
-        #region Course-Module management
-        [HttpGet("ManageModules/{courseId}")]
-        public async Task<IActionResult> ManageModules(int courseId)
-        {
-            var course = (await _courseService.GetCourseByIdAsync(courseId)).Data;
-
-            var courseModules = (await _courseService.GetModulesByCourseAsync(courseId)).Data;
-
-            ViewBag.CourseId = course.Id;
-            ViewBag.CourseTitle = course.Title;
-            return View(courseModules);
-        }
-
-        [HttpGet("CreateModule/{courseId}")]
-        public async Task<IActionResult> CreateModule(int courseId)
-        {
-            var course = (await _courseService.GetCourseByIdAsync(courseId)).Data;
-
-            ModuleDTO moduleDTO = new()
-            {
-                CourseDTO = course
-            };
-
-            return View(moduleDTO);
-        }
-
-        [HttpPost("CreateModule/{courseId}")]
-        public async Task<IActionResult> CreateModule(ModuleDTO moduleDTO)
-        {
-            var result = await _courseService.AddModuleToCourseAsync(moduleDTO.CourseId, moduleDTO);
-
-            if (result.Success)
-            {
-                TempData["success"] = "Module added successfully!";
-                return RedirectToAction(nameof(Index));
-            }
-
-            TempData["error"] = $"Error : {result.Message}";
-            return View(moduleDTO);
-        }
-
-        [HttpGet("EditModule/{moduleId}")]
-        public async Task<IActionResult> EditModule(int moduleId)
-        {
-            var module = (await _moduleService.GetModuleByIdAsync(moduleId)).Data;
-            return View(module);
-        }
-
-        [HttpPost("EditModule/{moduleId}")]
-        public async Task<IActionResult> EditModule(ModuleDTO moduleDTO)
-        {
-            var result = await _moduleService.UpdateModuleAsync(moduleDTO);
-
-            if (result.Success)
-            {
-                TempData["success"] = "Module updated successfully!";
-                return RedirectToAction(nameof(ManageModules), new { courseId = moduleDTO.CourseId });
-            }
-
-            TempData["error"] = $"Error : {result.Message}";
-            return View(moduleDTO);
         }
         #endregion
 

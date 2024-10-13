@@ -45,6 +45,23 @@ public class ModuleService(IUnitOfWork unitOfWork, IMapper mapper) : IModuleServ
             return new ResponseDTO<IEnumerable<ModuleDTO>>(ex.Message);
         }
     }
+    public async Task<ResponseDTO<IEnumerable<ModuleDTO>>> GetModulesByInstructorAsync(string instructorId)
+    {
+        try
+        {
+            var instructorModules = await _unitOfWork.Module.GetAllAsync(
+                filter: m => m.Course.InstructorId.Equals(instructorId),
+                includeProperties: "Course,Lessons");
+
+            var mappedModules = _mapper.Map<IEnumerable<ModuleDTO>>(instructorModules);
+
+            return new ResponseDTO<IEnumerable<ModuleDTO>>(mappedModules);
+        }
+        catch (Exception ex)
+        {
+            return new ResponseDTO<IEnumerable<ModuleDTO>>(ex.Message);
+        }
+    }
     public async Task<ResponseDTO<ModuleDTO>> GetModuleByIdAsync(int moduleId)
     {
         try

@@ -7,6 +7,7 @@ public interface IModuleService
     #region Module Management
     Task<ResponseDTO<IEnumerable<ModuleDTO>>> GetAllModulesAsync();
     Task<ResponseDTO<IEnumerable<ModuleDTO>>> GetModulesByCourseIdAsync(int courseId);
+    Task<ResponseDTO<IEnumerable<ModuleDTO>>> GetModulesByInstructorAsync(string instructorId);
     Task<ResponseDTO<ModuleDTO>> GetModuleByIdAsync(int moduleId);
 
     // POST actions

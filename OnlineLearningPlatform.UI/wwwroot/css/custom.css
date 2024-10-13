@@ -200,3 +200,13 @@ body {
 .accordion-body {
     background-color: #343a40;
 }
+
+/* Hover effects for buttons */
+.hover-zoom:hover {
+    transform: scale(1.05);
+    transition: transform 0.2s;
+}
+
+.accordion-button:not(.collapsed) {
+    background-color: #212529;
+}

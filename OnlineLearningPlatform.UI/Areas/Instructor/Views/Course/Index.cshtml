@@ -61,7 +61,7 @@
                                                         }
                                                     </ul>
                                                 }
-                                                <a asp-action="ManageModules" asp-route-courseId="@course.Id" class="btn btn-outline-warning btn-sm hover-zoom mt-2">Manage Modules</a>
+                                                <a asp-controller="Module" asp-action="ManageModules" asp-route-courseId="@course.Id" class="btn btn-outline-warning btn-sm hover-zoom mt-2">Manage Modules</a>
                                             </div>
 
                                             <!-- Quizzes -->
@@ -132,26 +132,17 @@
     }
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script>
-    function showDetails(type, title, content) {
-        Swal.fire({
+@section Scripts {
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        function showDetails(type, title, content) {
+            Swal.fire({
                 title: title,
-            text: content,
-            icon: 'info',
-            confirmButtonText: 'Close'
-        });
-    }
-</script>
-
-<style>
-    /* Hover effects for buttons */
-    .hover-zoom:hover {
-        transform: scale(1.05);
-        transition: transform 0.2s;
-    }
-
-    .accordion-button:not(.collapsed) {
-        background-color: #212529;
-    }
-</style>
+                text: content,
+                icon: 'info',
+                confirmButtonText: 'Close'
+            });
+        }
+    </script>
+}
