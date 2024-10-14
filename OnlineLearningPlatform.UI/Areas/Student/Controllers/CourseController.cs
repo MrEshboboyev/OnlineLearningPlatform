@@ -36,7 +36,22 @@ namespace OnlineLearningPlatform.UI.Areas.Student.Controllers
             if (result.Success)
             {
                 TempData["success"] = result.Message;
-                return RedirectToAction("Index", "Enrollment");
+                return RedirectToAction(nameof(EnrolledCourses));
+            }
+
+            TempData["error"] = $"Error : {result.Message}";
+            return RedirectToAction(nameof(Details), new { courseId });
+        }
+
+        [HttpPost("Unenroll/{courseId}")]
+        public async Task<IActionResult> Unenroll(int courseId)
+        {
+            var result = await _courseService.UnenrollUserFromCourseAsync(courseId, GetUserId());
+
+            if (result.Success)
+            {
+                TempData["success"] = result.Message;
+                return RedirectToAction(nameof(EnrolledCourses));
             }
 
             TempData["error"] = $"Error : {result.Message}";
