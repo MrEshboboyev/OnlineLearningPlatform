@@ -1,0 +1,30 @@
+﻿@model IEnumerable<QuizSubmissionDTO>
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4 text-light">Quiz Results</h2>
+
+    @if (Model == null || !Model.Any())
+    {
+        <div class="alert alert-warning text-center" role="alert">
+            No quiz results available.
+        </div>
+    }
+    else
+    {
+        <div class="list-group">
+            @foreach (var submission in Model)
+            {
+                <div class="list-group-item bg-dark text-light d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="mb-1">@submission.QuizDTO.Title</h5>
+                        <p class="mb-0"><strong>Submitted On:</strong> @submission.SubmissionDate.ToShortDateString()</p>
+                        <p class="mb-0"><strong>Grade:</strong> @submission.Grade%</p>
+                    </div>
+                    <a href="@Url.Action("ReviewQuiz", "Quiz", new { submissionId = submission.Id })" class="btn btn-outline-info">
+                        <i class="bi bi-eye"></i> Review
+                    </a>
+                </div>
+            }
+        </div>
+    }
+</div>

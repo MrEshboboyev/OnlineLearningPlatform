@@ -22,7 +22,7 @@ public class QuizSubmissionService(IUnitOfWork unitOfWork, IMapper mapper) : IQu
             await _unitOfWork.QuizSubmission.AddAsync(quizSubmission);
             await _unitOfWork.SaveAsync();
 
-            return new ResponseDTO<object>(null);
+            return new ResponseDTO<object>(null, "Quiz submitted!");
         }
         catch (Exception ex)
         {
@@ -201,7 +201,8 @@ public class QuizSubmissionService(IUnitOfWork unitOfWork, IMapper mapper) : IQu
         try
         {
             var studentQuizSubmissionsFromDb = await _unitOfWork.QuizSubmission.GetAllAsync(
-               qs => qs.StudentId.Equals(studentId));
+               filter: qs => qs.StudentId.Equals(studentId),
+               includeProperties: "Quiz");
 
             var mappedSubmissions = _mapper.Map<IEnumerable<QuizSubmissionDTO>>(studentQuizSubmissionsFromDb);
 

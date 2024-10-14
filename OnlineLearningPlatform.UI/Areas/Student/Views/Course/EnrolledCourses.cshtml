@@ -31,9 +31,10 @@
                                 <p><strong>Progress:</strong> @enrollment.ProgressPercentage%</p>
                             </div>
 
-                            <!-- "View Lessons" button -->
-                            <div class="text-end">
-                                <a href="#moduleAccordion-@enrollment.Id" class="btn btn-outline-info" data-bs-toggle="collapse">View Lessons</a>
+                            <!-- "View Lessons" and "View Quizzes" buttons -->
+                            <div class="d-flex justify-content-end">
+                                <a href="#moduleAccordion-@enrollment.Id" class="btn btn-outline-info me-2" data-bs-toggle="collapse">View Lessons</a>
+                                <a href="@Url.Action("Index", "Quiz", new { courseId = enrollment.CourseId })" class="btn btn-outline-warning">View Quizzes</a>
                             </div>
 
                             <!-- Modules Accordion -->
