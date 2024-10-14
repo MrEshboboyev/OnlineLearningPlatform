@@ -28,6 +28,23 @@ public class QuestionService(IUnitOfWork unitOfWork, IMapper mapper) : IQuestion
             return new ResponseDTO<IEnumerable<QuestionDTO>>(ex.Message);
         }
     }
+    public async Task<ResponseDTO<IEnumerable<QuestionDTO>>> GetQuestionsByInstructorAsync(string instructorId)
+    {
+        try
+        {
+            var instructorQuestions = await _unitOfWork.Question.GetAllAsync(
+                filter: q => q.Quiz.Course.InstructorId.Equals(instructorId),
+                includeProperties: "Quiz,Answers");
+
+            var mappedQuestions = _mapper.Map<IEnumerable<QuestionDTO>>(instructorQuestions);
+
+            return new ResponseDTO<IEnumerable<QuestionDTO>>(mappedQuestions);
+        }
+        catch (Exception ex)
+        {
+            return new ResponseDTO<IEnumerable<QuestionDTO>>(ex.Message);
+        }
+    }
     public async Task<ResponseDTO<IEnumerable<QuestionDTO>>> GetQuestionsByQuizIdAsync(int quizId)
     {
         try
@@ -73,7 +90,7 @@ public class QuestionService(IUnitOfWork unitOfWork, IMapper mapper) : IQuestion
             await _unitOfWork.Question.AddAsync(questionForDb);
             await _unitOfWork.SaveAsync();
 
-            return new ResponseDTO<object>(null);
+            return new ResponseDTO<object>(null, "Question created!");
         }
         catch (Exception ex)
         {
@@ -94,7 +111,7 @@ public class QuestionService(IUnitOfWork unitOfWork, IMapper mapper) : IQuestion
             await _unitOfWork.Question.UpdateAsync(questionFromDb);
             await _unitOfWork.SaveAsync();
 
-            return new ResponseDTO<object>(null);
+            return new ResponseDTO<object>(null, "Question updated!");
         }
         catch (Exception ex)
         {
@@ -112,7 +129,7 @@ public class QuestionService(IUnitOfWork unitOfWork, IMapper mapper) : IQuestion
             await _unitOfWork.Question.RemoveAsync(questionFromDb);
             await _unitOfWork.SaveAsync();
 
-            return new ResponseDTO<object>(null);
+            return new ResponseDTO<object>(null, "Question deleted!");
         }
         catch (Exception ex)
         {

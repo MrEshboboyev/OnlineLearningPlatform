@@ -1,0 +1,33 @@
+﻿@model QuestionDTO
+
+@{
+    ViewBag.Title = "Create New Question";
+}
+
+<div class="container mt-4">
+    <h1 class="text-center mb-4">Create New Question for Quiz: @Model.QuizDto.Title</h1>
+
+    <form method="post" asp-action="CreateQuestion" novalidate>
+        <!-- Question Text -->
+        <div class="mb-3">
+            <label for="questionText" class="form-label">Question Text</label>
+            <textarea class="form-control" id="questionText" name="QuestionText" rows="3" placeholder="Enter the question text..." required></textarea>
+        </div>
+
+        <!-- Question Type -->
+        <div class="mb-3">
+            <label for="questionType" class="form-label">Question Type</label>
+            <select class="form-select" id="questionType" name="QuestionType" required>
+                <option value="" disabled selected>Select Question Type</option>
+                <option value="Multiple Choice">Multiple Choice</option>
+                <option value="True/False">True/False</option>
+                <!-- Add more types as necessary -->
+            </select>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="text-center">
+            <button type="submit" class="btn btn-success">Create Question</button>
+        </div>
+    </form>
+</div>

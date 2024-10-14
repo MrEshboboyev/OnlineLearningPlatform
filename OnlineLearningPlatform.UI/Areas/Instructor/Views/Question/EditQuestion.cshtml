@@ -1,0 +1,45 @@
+﻿@model QuestionDTO
+@{
+    ViewBag.Title = "Edit Question";
+}
+
+<div class="container mt-4">
+    <h1 class="text-center">Edit Question</h1>
+
+    <form method="post" asp-action="EditQuestion">
+        <input asp-for="Id" hidden/>
+        <input asp-for="QuizId" hidden/>
+
+        <div class="mb-3">
+            <label for="questionText" class="form-label">Question Text</label>
+            <input type="text" class="form-control" id="questionText" name="QuestionText" value="@Model.QuestionText">
+        </div>
+
+        <div class="mb-3">
+            <label for="questionType" class="form-label">Question Type</label>
+            <select class="form-select" id="questionType" name="QuestionType">
+                <option value="Multiple Choice" selected>Multiple Choice</option>
+                <option value="True/False">True/False</option>
+            </select>
+        </div>
+
+        <!-- Answers -->
+        <h5>Answers</h5>
+        @foreach (var answer in Model.AnswerDTOs)
+        {
+            <div class="mb-3">
+                <label class="form-label">Answer</label>
+                <input type="text" class="form-control" value="@answer.AnswerText" name="Answers[@answer.Id]">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="IsCorrect[@answer.Id]" @if (answer.IsCorrect)
+                    {
+                        <text>checked</text>
+                    }>
+                    <label class="form-check-label">Correct</label>
+                </div>
+            </div>
+        }
+
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+    </form>
+</div>

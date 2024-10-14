@@ -38,6 +38,9 @@
                             </p>
                             
 
+                            <a asp-controller="Question" asp-action="ManageQuestions" asp-route-quizId="@quiz.Id" class="btn btn-secondary">
+                                <i class="bi bi-question"></i> Manage Questions
+                            </a>
                             <a asp-action="QuizDetails" asp-route-quizId="@quiz.Id" class="btn btn-primary">
                                 <i class="bi bi-eye"></i> Details
                             </a>

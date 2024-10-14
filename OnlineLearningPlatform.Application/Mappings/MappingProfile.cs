@@ -91,6 +91,8 @@ namespace OnlineLearningPlatform.Application.Mappings
 
             // Question -> QuestionDTO
             CreateMap<Question, QuestionDTO>()
+                .ForMember(dest => dest.QuizDto, opt => opt.MapFrom(src => src.Quiz))
+                .ForMember(dest => dest.AnswerDTOs, opt => opt.MapFrom(src => src.Answers))
                 .ReverseMap()
                     .ForMember(dest => dest.Quiz, opt => opt.Ignore())
                     .ForMember(dest => dest.Answers, opt => opt.Ignore());

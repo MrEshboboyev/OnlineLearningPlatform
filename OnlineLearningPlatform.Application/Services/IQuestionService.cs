@@ -6,6 +6,7 @@ public interface IQuestionService
 {
     #region Question Management
     Task<ResponseDTO<IEnumerable<QuestionDTO>>> GetAllQuestionsAsync();
+    Task<ResponseDTO<IEnumerable<QuestionDTO>>> GetQuestionsByInstructorAsync(string instructorId);
     Task<ResponseDTO<IEnumerable<QuestionDTO>>> GetQuestionsByQuizIdAsync(int quizId);
     Task<ResponseDTO<QuestionDTO>> GetQuestionByIdAsync(int questionId);
 

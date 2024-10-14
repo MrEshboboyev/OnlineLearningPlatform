@@ -1,0 +1,48 @@
+﻿@model IEnumerable<QuestionDTO>
+@{
+    ViewBag.Title = "Manage Questions";
+}
+
+<div class="container mt-4">
+    <h1 class="text-center mb-4">Questions for Quiz: @ViewBag.QuizTitle</h1>
+
+    <!-- Create Question Button -->
+    <div class="text-end mb-3">
+        <a asp-action="CreateQuestion" asp-route-quizId="@ViewBag.QuizId" class="btn btn-primary">Create New Question</a>
+    </div>
+
+    <!-- Questions List -->
+    <div class="row">
+        @foreach (var question in Model)
+        {
+            <div class="col-md-6 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-secondary text-white">
+                        <h5 class="card-title">@question.QuestionText</h5>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Type:</strong> @question.QuestionType</p>
+
+                        <!-- List of Answers -->
+                        <h6>Answers</h6>
+                        <ul class="list-group mb-3">
+                            @foreach (var answer in question.AnswerDTOs)
+                            {
+                                <li class="list-group-item">
+                                    @answer.AnswerText
+                                    <span class="badge @((answer.IsCorrect) ? "bg-success" : "bg-danger") float-end">
+                                        @((answer.IsCorrect) ? "Correct" : "Incorrect")
+                                    </span>
+                                </li>
+                            }
+                        </ul>
+
+                        <!-- Action Buttons -->
+                        <a asp-action="EditQuestion" asp-route-questionId="@question.Id" class="btn btn-warning btn-sm me-2">Edit</a>
+                        <a asp-action="DeleteQuestion" asp-route-questionId="@question.Id" class="btn btn-danger btn-sm">Delete</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

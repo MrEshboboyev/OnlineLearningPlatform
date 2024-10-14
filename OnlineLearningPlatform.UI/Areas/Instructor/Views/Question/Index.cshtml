@@ -1,0 +1,50 @@
+﻿@model IEnumerable<QuestionDTO>
+@{
+    ViewBag.Title = "Manage Your Questions";
+}
+
+<div class="container mt-4">
+    <h1 class="text-center">Instructor Questions</h1>
+
+    <a asp-action="ManageQuestion" asp-route-quizId="@Model"></a>
+
+    <!-- Questions Accordion -->
+    <div class="accordion" id="questionsAccordion">
+        @foreach (var question in Model)
+        {
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="heading@question.Id">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse@question.Id" aria-expanded="true" aria-controls="collapse@question.Id">
+                        @question.QuestionText
+                    </button>
+                </h2>
+                <div id="collapse@question.Id" class="accordion-collapse collapse" aria-labelledby="heading@question.Id" data-bs-parent="#questionsAccordion">
+                    <div class="accordion-body">
+                        <p><strong>Quiz:</strong> @question.QuizDto.Title</p>
+                        <p><strong>Type:</strong> @question.QuestionType</p>
+
+                        <!-- Answers -->
+                        <h5>Answers</h5>
+                        <ul class="list-group">
+                            @foreach (var answer in question.AnswerDTOs)
+                            {
+                                <li class="list-group-item d-flex justify-content-between">
+                                    @answer.AnswerText
+                                    <span class="badge @((answer.IsCorrect) ? "bg-success" : "bg-danger")">
+                                        @((answer.IsCorrect) ? "Correct" : "Incorrect")
+                                    </span>
+                                </li>
+                            }
+                        </ul>
+
+                        <!-- Edit/Delete Buttons -->
+                        <div class="mt-3">
+                            <a asp-action="EditQuestion" class="btn btn-warning btn-sm me-2">Edit</a>
+                            <a asp-action="DeleteQuestion" class="btn btn-danger btn-sm">Delete</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
