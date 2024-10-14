@@ -6,27 +6,6 @@
 
 <div class="container mt-4">
     <h1 class="text-center mb-4">Manage Your Lessons</h1>
-
-    <!-- Filtering options -->
-    <div class="row mb-4">
-        <div class="col-md-6">
-            <label for="courseFilter" class="form-label">Filter by Course</label>
-            <select id="courseFilter" class="form-select">
-                <option value="">All Courses</option>
-                @foreach (var course in Model.Select(m => m.ModuleDTO.CourseDTO).Distinct())
-                {
-                    <option value="@course.Id">@course.Title</option>
-                }
-            </select>
-        </div>
-        <div class="col-md-6">
-            <label for="moduleFilter" class="form-label">Filter by Module</label>
-            <select id="moduleFilter" class="form-select">
-                <option value="">All Modules</option>
-            </select>
-        </div>
-    </div>
-
     <!-- Lessons list -->
     <div class="row" id="lessonsContainer">
         @foreach (var lesson in Model)
@@ -41,55 +20,11 @@
                         <p class="card-text">@lesson.Content</p>
                     </div>
                     <div class="card-footer text-end">
-                        <a href="@Url.Action("EditLesson", new { id = lesson.Id })" class="btn btn-warning btn-sm">Edit</a>
-                        <form asp-action="DeleteLesson" method="post" class="d-inline">
-                            <input type="hidden" name="id" value="@lesson.Id" />
-                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                        </form>
+                        <a asp-action="EditLesson" asp-route-lessonId="@lesson.Id" class="btn btn-warning btn-sm">Edit</a>
+                        <a asp-action="DeleteLesson" asp-route-lessonId="@lesson.Id" class="btn btn-danger btn-sm">Delete</a>
                     </div>
                 </div>
             </div>
         }
     </div>
 </div>
-
-@section Scripts {
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            // Filter lessons based on course and module
-            const lessonsContainer = document.getElementById('lessonsContainer');
-            const courseFilter = document.getElementById('courseFilter');
-            const moduleFilter = document.getElementById('moduleFilter');
-
-            courseFilter.addEventListener('change', function() {
-                const selectedCourseId = this.value;
-                moduleFilter.innerHTML = '<option value="">All Modules</option>'; // Reset module filter
-
-                const modules = [...new Set([...lessonsContainer.querySelectorAll('.lesson-item')]
-                    .filter(item => selectedCourseId === "" || item.dataset.courseId === selectedCourseId)
-                    .map(item => ({ id: item.dataset.moduleId, title: item.querySelector('.card-subtitle').innerText.split('(')[1].slice(0, -1) }))
-                )];
-
-                modules.forEach(module => {
-                    moduleFilter.insertAdjacentHTML('beforeend', `<option value="${module.id}">${module.title}</option>`);
-                });
-
-                filterLessons();
-            });
-
-            moduleFilter.addEventListener('change', filterLessons);
-
-            function filterLessons() {
-                const selectedCourseId = courseFilter.value;
-                const selectedModuleId = moduleFilter.value;
-
-                [...lessonsContainer.querySelectorAll('.lesson-item')].forEach(item => {
-                    const courseMatches = selectedCourseId === "" || item.dataset.courseId === selectedCourseId;
-                    const moduleMatches = selectedModuleId === "" || item.dataset.moduleId === selectedModuleId;
-
-                    item.style.display = courseMatches && moduleMatches ? "" : "none";
-                });
-            }
-        });
-    </script>
-}

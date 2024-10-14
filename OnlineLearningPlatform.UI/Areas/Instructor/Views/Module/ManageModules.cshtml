@@ -46,7 +46,7 @@
                             <div class="mt-3">
                                 <a asp-action="EditModule" asp-route-moduleId="@module.Id" class="btn btn-primary">Edit Module</a>
                                 <a asp-action="DeleteModule" asp-route-moduleId="@module.Id" class="btn btn-danger">Delete Module</a>
-                                <a asp-action="ManageLessons" asp-route-moduleId="@module.Id" class="btn btn-warning">Manage Lessons</a>
+                                <a asp-controller="Lesson" asp-action="ManageLessons" asp-route-moduleId="@module.Id" class="btn btn-warning">Manage Lessons</a>
                             </div>
                         </div>
                     </div>

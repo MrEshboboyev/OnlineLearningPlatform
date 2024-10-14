@@ -65,8 +65,8 @@ namespace OnlineLearningPlatform.UI.Areas.Instructor.Controllers
         [HttpGet("EditLesson/{lessonId}")]
         public async Task<IActionResult> EditLesson(int lessonId)
         {
-            var module = (await _lessonService.GetLessonByIdAsync(lessonId)).Data;
-            return View(module);
+            var lesson = (await _lessonService.GetLessonByIdAsync(lessonId)).Data;
+            return View(lesson);
         }
 
         [HttpPost("EditLesson/{lessonId}")]
@@ -77,6 +77,28 @@ namespace OnlineLearningPlatform.UI.Areas.Instructor.Controllers
             if (result.Success)
             {
                 TempData["success"] = "Lesson updated successfully!";
+                return RedirectToAction(nameof(ManageLessons), new { moduleId = lessonDTO.ModuleId });
+            }
+
+            TempData["error"] = $"Error : {result.Message}";
+            return View(lessonDTO);
+        }
+        
+        [HttpGet("DeleteLesson/{lessonId}")]
+        public async Task<IActionResult> DeleteLesson(int lessonId)
+        {
+            var lesson = (await _lessonService.GetLessonByIdAsync(lessonId)).Data;
+            return View(lesson);
+        }
+
+        [HttpPost("DeleteLesson/{lessonId}")]
+        public async Task<IActionResult> DeleteLesson(LessonDTO lessonDTO)
+        {
+            var result = await _lessonService.DeleteLessonAsync(lessonDTO);
+
+            if (result.Success)
+            {
+                TempData["success"] = "Lesson deleted successfully!";
                 return RedirectToAction(nameof(ManageLessons), new { moduleId = lessonDTO.ModuleId });
             }
 

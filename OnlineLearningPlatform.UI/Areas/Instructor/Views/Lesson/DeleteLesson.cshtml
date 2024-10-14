@@ -1,0 +1,24 @@
+﻿@model LessonDTO
+
+<div class="container">
+    <h2 class="text-danger">Delete Lesson: @Model.Title</h2>
+
+    <form asp-action="DeleteLesson" asp-route-lessonId="@Model.Id" method="post" class="bg-dark p-4 rounded">
+        @Html.AntiForgeryToken()
+
+        <input asp-for="Id" hidden />
+        <input asp-for="ModuleId" hidden />
+        <div class="mb-3">
+            <label for="Title" class="form-label text-light">Lesson Title</label>
+            <input disabled asp-for="Title" class="form-control bg-secondary text-light" />
+        </div>
+
+        <div class="mb-3">
+            <label for="Content" class="form-label text-light">Lesson Content</label>
+            <textarea disabled asp-for="Content" class="form-control bg-secondary text-light"></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-danger">Delete Lesson</button>
+        <a asp-action="ManageLessons" asp-route-moduleId="@Model.ModuleId" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
