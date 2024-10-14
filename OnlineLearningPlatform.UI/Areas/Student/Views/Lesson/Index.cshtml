@@ -1,0 +1,46 @@
+﻿@model IEnumerable<LessonDTO>
+
+@{
+    ViewBag.Title = "Course Lessons";
+}
+
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Lessons for @Model.FirstOrDefault()?.ModuleDTO.CourseDTO.Title</h1>
+
+    <!-- Module navigation -->
+    <div class="accordion" id="moduleAccordion">
+        @foreach (var module in Model.GroupBy(x => x.ModuleDTO))
+        {
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingModule-@module.Key.Id">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseModule-@module.Key.Id" aria-expanded="true" aria-controls="collapseModule-@module.Key.Id">
+                        @module.Key.Title
+                    </button>
+                </h2>
+                <div id="collapseModule-@module.Key.Id" class="accordion-collapse collapse" aria-labelledby="headingModule-@module.Key.Id" data-bs-parent="#moduleAccordion">
+                    <div class="accordion-body">
+                        <div class="row">
+                            @foreach (var lesson in module)
+                            {
+                                <div class="col-md-4 mb-4">
+                                    <div class="card h-100 shadow-sm">
+                                        <div class="card-header bg-primary text-white">
+                                            <h5 class="card-title">@lesson.Title</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <p class="card-text text-truncate">@lesson.Content</p>
+                                        </div>
+                                        <div class="card-footer text-end">
+                                            <a href="@Url.Action("Details", new { lessonId = lesson.Id })" class="btn btn-outline-primary btn-sm">View Details</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+

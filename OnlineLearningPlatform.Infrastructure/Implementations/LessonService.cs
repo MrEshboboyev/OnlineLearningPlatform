@@ -49,11 +49,28 @@ public class LessonService(IUnitOfWork unitOfWork, IMapper mapper) : ILessonServ
     {
         try
         {
-            var moduleLessons = await _unitOfWork.Lesson.GetAllAsync(
+            var instructorLessons = await _unitOfWork.Lesson.GetAllAsync(
                 filter: l => l.Module.Course.InstructorId.Equals(instructorId),
                 includeProperties: "Module.Course");
 
-            var mappedLessons = _mapper.Map<IEnumerable<LessonDTO>>(moduleLessons);
+            var mappedLessons = _mapper.Map<IEnumerable<LessonDTO>>(instructorLessons);
+
+            return new ResponseDTO<IEnumerable<LessonDTO>>(mappedLessons);
+        }
+        catch (Exception ex)
+        {
+            return new ResponseDTO<IEnumerable<LessonDTO>>(ex.Message);
+        }
+    }
+    public async Task<ResponseDTO<IEnumerable<LessonDTO>>> GetLessonsByCourseAsync(int courseId)
+    {
+        try
+        {
+            var courseLessons = await _unitOfWork.Lesson.GetAllAsync(
+                filter: l => l.Module.CourseId.Equals(courseId),
+                includeProperties: "Module.Course");
+
+            var mappedLessons = _mapper.Map<IEnumerable<LessonDTO>>(courseLessons);
 
             return new ResponseDTO<IEnumerable<LessonDTO>>(mappedLessons);
         }
@@ -68,7 +85,7 @@ public class LessonService(IUnitOfWork unitOfWork, IMapper mapper) : ILessonServ
         {
             var lesson = await _unitOfWork.Lesson.GetAsync(
                 filter: l => l.Id.Equals(lessonId),
-                includeProperties: "Module");
+                includeProperties: "Module.Course");
 
             var mappedLesson = _mapper.Map<LessonDTO>(lesson);
 

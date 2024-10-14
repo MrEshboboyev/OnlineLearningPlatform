@@ -8,6 +8,7 @@ public interface ILessonService
     Task<ResponseDTO<IEnumerable<LessonDTO>>> GetAllLessonsAsync();
     Task<ResponseDTO<IEnumerable<LessonDTO>>> GetLessonsByModuleAsync(int moduleId);
     Task<ResponseDTO<IEnumerable<LessonDTO>>> GetLessonsByInstructorAsync(string instructorId);
+    Task<ResponseDTO<IEnumerable<LessonDTO>>> GetLessonsByCourseAsync(int courseId);
     Task<ResponseDTO<LessonDTO>> GetLessonByIdAsync(int lessonId);
 
     // POST actions
