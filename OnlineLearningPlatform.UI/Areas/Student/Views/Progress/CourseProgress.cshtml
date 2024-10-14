@@ -1,0 +1,70 @@
+﻿@model IEnumerable<ProgressDTO>
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4 text-light">Course Progress</h2>
+
+    @if (Model == null || !Model.Any())
+    {
+        <div class="alert alert-warning text-center" role="alert">
+            No progress data available for this course.
+        </div>
+    }
+    else
+    {
+        <div class="card bg-dark text-light shadow">
+            <div class="card-body">
+                <h3 class="card-title text-info">@Model.FirstOrDefault()?.LessonDTO.ModuleDTO.CourseDTO.Title</h3>
+                <p class="card-text">@Model.FirstOrDefault()?.LessonDTO.ModuleDTO.CourseDTO.Description</p>
+
+                <!-- Progress Bar -->
+                @{
+                    var totalLessons = Model.Count();
+                    var completedLessons = Model.Count(p => p.IsCompleted);
+                    var progressPercentage = (completedLessons / (double)totalLessons) * 100;
+                }
+                <div class="progress mb-4">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" style="width: @progressPercentage%" aria-valuenow="@progressPercentage" aria-valuemin="0" aria-valuemax="100">@progressPercentage.ToString("0")%</div>
+                </div>
+
+                <!-- Lessons Table -->
+                <table class="table table-dark table-hover table-striped border-light">
+                    <thead>
+                        <tr>
+                            <th>Lesson Title</th>
+                            <th>Status</th>
+                            <th>Completion Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var progress in Model)
+                        {
+                            <tr>
+                                <td>@progress.LessonDTO.Title</td>
+                                <td>
+                                    @if (progress.IsCompleted)
+                                    {
+                                        <span class="badge bg-success">Completed</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-warning">In Progress</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (progress.IsCompleted)
+                                    {
+                                        @progress.CompletionDate.ToShortDateString()
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">-</span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+</div>

@@ -28,7 +28,6 @@ public class ProgressService(IUnitOfWork unitOfWork, IMapper mapper) : IProgress
             return new ResponseDTO<ProgressDTO>(ex.Message);
         }
     }
-
     public async Task<ResponseDTO<IEnumerable<ProgressDTO>>> GetStudentProgressInCourseAsync(string studentId, int courseId)
     {
         try
@@ -44,7 +43,7 @@ public class ProgressService(IUnitOfWork unitOfWork, IMapper mapper) : IProgress
                 // get progress (lesson and student)
                 var progress = await _unitOfWork.Progress.GetAsync(
                     p => p.LessonId.Equals(lesson.Id),
-                    includeProperties: "Student,Lesson");
+                    includeProperties: "Student,Lesson.Module.Course");
 
                 studentProgressesInCourse.Add(_mapper.Map<ProgressDTO>(progress));
             }
@@ -214,7 +213,8 @@ public class ProgressService(IUnitOfWork unitOfWork, IMapper mapper) : IProgress
         try
         {
             var studentProgresses = await _unitOfWork.Progress.GetAllAsync(
-                p => p.StudentId.Equals(studentId));
+                filter: p => p.StudentId.Equals(studentId),
+                includeProperties: "Student,Lesson.Module.Course");
 
             // mapping
             var mappedProgresses = _mapper.Map<IEnumerable<ProgressDTO>>(studentProgresses);

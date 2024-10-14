@@ -1,0 +1,45 @@
+﻿@model IEnumerable<ProgressDTO>
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4 text-light">Your Progress History</h2>
+
+    @if (Model == null || !Model.Any())
+    {
+        <div class="alert alert-warning text-center" role="alert">
+            No progress data available.
+        </div>
+    }
+    else
+    {
+        <div class="accordion" id="progressAccordion">
+            @foreach (var progress in Model)
+            {
+                <div class="accordion-item bg-dark border-light shadow-sm mb-4">
+                    <h2 class="accordion-header" id="heading-@progress.Id">
+                        <button class="accordion-button collapsed text-light bg-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-@progress.Id" aria-expanded="false" aria-controls="collapse-@progress.Id">
+                            @progress.LessonDTO.Title
+                        </button>
+                    </h2>
+                    <div id="collapse-@progress.Id" class="accordion-collapse collapse" aria-labelledby="heading-@progress.Id" data-bs-parent="#progressAccordion">
+                        <div class="accordion-body text-light bg-dark">
+                            <p><strong>Course:</strong> @progress.LessonDTO.ModuleDTO.CourseDTO.Title</p>
+                            <p><strong>Lesson:</strong> @progress.LessonDTO.Title</p>
+                            <p><strong>Completion Status:</strong> @(progress.IsCompleted ? "Completed" : "In Progress")</p>
+                            @if (progress.IsCompleted)
+                            {
+                                <p><strong>Completion Date:</strong> @progress.CompletionDate.ToShortDateString()</p>
+                            }
+
+                            <!-- View Course Progress Button -->
+                            <div class="text-end">
+                                <a href="@Url.Action("CourseProgress", "Progress", new { courseId = progress.LessonDTO.ModuleDTO.CourseDTO.Id })" class="btn btn-outline-info">
+                                    View Full Course Progress
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
