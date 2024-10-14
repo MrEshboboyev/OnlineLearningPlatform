@@ -38,6 +38,7 @@
                         </ul>
 
                         <!-- Action Buttons -->
+                        <a asp-controller="Answer" asp-action="ManageAnswers" asp-route-questionId="@question.Id" class="btn btn-outline-primary btn-sm me-2">Manage Answers</a>
                         <a asp-action="EditQuestion" asp-route-questionId="@question.Id" class="btn btn-warning btn-sm me-2">Edit</a>
                         <a asp-action="DeleteQuestion" asp-route-questionId="@question.Id" class="btn btn-danger btn-sm">Delete</a>
                     </div>

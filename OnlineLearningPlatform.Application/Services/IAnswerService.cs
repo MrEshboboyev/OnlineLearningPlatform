@@ -7,6 +7,7 @@ public interface IAnswerService
     #region Answer Management
     Task<ResponseDTO<IEnumerable<AnswerDTO>>> GetAllAnswersAsync();
     Task<ResponseDTO<IEnumerable<AnswerDTO>>> GetAnswersByQuestionIdAsync(int questionId);
+    Task<ResponseDTO<AnswerDTO>> GetAnswerByIdAsync(int answerId);
 
     // POST actions
     Task<ResponseDTO<object>> AddAnswerToQuestionAsync(int questionId, AnswerDTO answerDTO);

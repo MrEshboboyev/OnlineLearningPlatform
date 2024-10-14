@@ -1,0 +1,22 @@
+﻿@model AnswerDTO
+
+@{
+    ViewBag.Title = "Delete Answer";
+}
+
+<div class="container mt-4">
+    <h1 class="text-center mb-4">Delete Answer</h1>
+    <div class="alert alert-warning" role="alert">
+        Are you sure you want to delete the answer: "<strong>@Model.AnswerText</strong>"?
+    </div>
+
+    <form method="post" asp-action="DeleteAnswer">
+        <input asp-for="Id" hidden />
+        <input asp-for="QuestionId" hidden />
+
+        <div class="text-center">
+            <button type="submit" class="btn btn-danger">Delete</button>
+            <a href="@Url.Action("ManageAnswers", new { questionId = Model.QuestionId })" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>

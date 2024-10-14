@@ -1,0 +1,30 @@
+﻿@model AnswerDTO
+
+@{
+    ViewBag.Title = "Edit Answer";
+}
+
+<div class="container mt-4">
+    <h1 class="text-center mb-4">Edit Answer for Question: @Model.QuestionDTO.QuestionText</h1>
+
+    <form method="post" asp-action="EditAnswer" novalidate>
+        <input asp-for="Id" hidden/>
+        <input asp-for="QuestionId" hidden/>
+        <!-- Answer Text -->
+        <div class="mb-3">
+            <label for="answerText" class="form-label">Answer Text</label>
+            <textarea class="form-control" id="answerText" name="AnswerText" rows="3" placeholder="Enter the answer text..." required>@Model.AnswerText</textarea>
+        </div>
+
+        <!-- Correct Answer Checkbox -->
+        <div class="form-check mb-4">
+            <input class="form-check-input" asp-for="@Model.IsCorrect">
+            <label class="form-check-label" for="isCorrect">Mark as Correct Answer</label>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="text-center">
+            <button type="submit" class="btn btn-success">Update Answer</button>
+        </div>
+    </form>
+</div>

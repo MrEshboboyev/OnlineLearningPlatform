@@ -45,7 +45,23 @@ public class AnswerService(IUnitOfWork unitOfWork, IMapper mapper) : IAnswerServ
             return new ResponseDTO<IEnumerable<AnswerDTO>>(ex.Message);
         }
     }
+    public async Task<ResponseDTO<AnswerDTO>> GetAnswerByIdAsync(int answerId)
+    {
+        try
+        {
+            var answer = await _unitOfWork.Answer.GetAsync(
+                filter: a => a.Id.Equals(answerId),
+                includeProperties: "Question");
 
+            var mappedAnswers = _mapper.Map<AnswerDTO>(answer);
+
+            return new ResponseDTO<AnswerDTO>(mappedAnswers);
+        }
+        catch (Exception ex)
+        {
+            return new ResponseDTO<AnswerDTO>(ex.Message);
+        }
+    }
     // POST actions
     public async Task<ResponseDTO<object>> AddAnswerToQuestionAsync(int questionId, AnswerDTO answerDTO)
     {
@@ -64,7 +80,7 @@ public class AnswerService(IUnitOfWork unitOfWork, IMapper mapper) : IAnswerServ
             await _unitOfWork.Question.UpdateAsync(question);
             await _unitOfWork.SaveAsync();
 
-            return new ResponseDTO<object>(null);
+            return new ResponseDTO<object>(null, "Answer added to question!");
         }
         catch (Exception ex)
         {
@@ -85,7 +101,7 @@ public class AnswerService(IUnitOfWork unitOfWork, IMapper mapper) : IAnswerServ
             await _unitOfWork.Answer.UpdateAsync(answerFromDb);
             await _unitOfWork.SaveAsync();
 
-            return new ResponseDTO<object>(null);
+            return new ResponseDTO<object>(null, "Answer updated!");
         }
         catch (Exception ex)
         {
@@ -103,7 +119,7 @@ public class AnswerService(IUnitOfWork unitOfWork, IMapper mapper) : IAnswerServ
             await _unitOfWork.Answer.RemoveAsync(answerFromDb);
             await _unitOfWork.SaveAsync();
 
-            return new ResponseDTO<object>(null);
+            return new ResponseDTO<object>(null, "Answer removed from question!");
         }
         catch (Exception ex)
         {

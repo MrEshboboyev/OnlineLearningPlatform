@@ -102,6 +102,7 @@ namespace OnlineLearningPlatform.Application.Mappings
 
             // Answer -> AnswerDTO
             CreateMap<Answer, AnswerDTO>()
+                .ForMember(dest => dest.QuestionDTO, opt => opt.MapFrom(src => src.Question))
                 .ReverseMap()
                     .ForMember(dest => dest.Question, opt => opt.Ignore());
             #endregion
