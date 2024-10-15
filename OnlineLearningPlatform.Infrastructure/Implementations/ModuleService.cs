@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Hangfire;
 using OnlineLearningPlatform.Application.Common.Interfaces;
 using OnlineLearningPlatform.Application.DTOs;
 using OnlineLearningPlatform.Application.Services;
@@ -6,10 +7,12 @@ using OnlineLearningPlatform.Domain.Entities;
 
 namespace OnlineLearningPlatform.Infrastructure.Implementations;
 
-public class ModuleService(IUnitOfWork unitOfWork, IMapper mapper) : IModuleService
+public class ModuleService(IUnitOfWork unitOfWork, IMapper mapper, 
+    IProgressService progressService) : IModuleService
 {
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
     private readonly IMapper _mapper = mapper;
+    private readonly IProgressService _progressService = progressService;
 
     #region Module Management
     public async Task<ResponseDTO<IEnumerable<ModuleDTO>>> GetAllModulesAsync()
@@ -179,6 +182,9 @@ public class ModuleService(IUnitOfWork unitOfWork, IMapper mapper) : IModuleServ
             await _unitOfWork.Module.UpdateAsync(module);
             await _unitOfWork.SaveAsync();
 
+            // Enqueue a Hangfire job to update progress for all enrolled users
+            BackgroundJob.Enqueue(() => UpdateProgressForEnrolledStudents(moduleId, lesson));
+
             return new ResponseDTO<object>(null, "Add lesson to module!");
         }
         catch (Exception ex)
@@ -330,4 +336,12 @@ public class ModuleService(IUnitOfWork unitOfWork, IMapper mapper) : IModuleServ
         }
     }
     #endregion
+
+
+    // Hangfire background method
+    public async Task UpdateProgressForEnrolledStudents(int moduleId, Lesson lesson)
+    {
+        // Call service to handle the progress update
+        await _progressService.UpdateProgressForNewLesson(moduleId, lesson);
+    }
 }
