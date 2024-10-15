@@ -29,6 +29,13 @@ namespace OnlineLearningPlatform.Infrastructure.Configurations
             services.AddScoped<IQuizService, QuizService>();
             services.AddScoped<IQuizSubmissionService, QuizSubmissionService>();
 
+            // Hangfire PostgreSQL Configuration
+            var hangfireConnectionString = configuration.GetConnectionString("HangfireConnection");
+            if (string.IsNullOrEmpty(hangfireConnectionString))
+                throw new ArgumentNullException(nameof(hangfireConnectionString));
+
+            services.AddHangfireServices(hangfireConnectionString);
+
             return services;
         }
     }
