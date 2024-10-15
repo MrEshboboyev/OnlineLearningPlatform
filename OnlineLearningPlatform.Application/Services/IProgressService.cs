@@ -1,5 +1,4 @@
 ﻿using OnlineLearningPlatform.Application.DTOs;
-using OnlineLearningPlatform.Domain.Entities;
 
 namespace OnlineLearningPlatform.Application.Services;
 
@@ -37,5 +36,4 @@ public interface IProgressService
     Task<ResponseDTO<int>> GetCompletedLessonsCountAsync(string studentId, int courseId);
     Task<ResponseDTO<Dictionary<string, double>>> GetCourseCompletionStatisticsAsync();
     #endregion
-    Task UpdateProgressForNewLesson(int moduleId, Lesson lesson);
 }

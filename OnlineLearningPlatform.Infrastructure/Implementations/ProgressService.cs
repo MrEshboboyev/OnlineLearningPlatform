@@ -2,7 +2,6 @@
 using OnlineLearningPlatform.Application.Common.Interfaces;
 using OnlineLearningPlatform.Application.DTOs;
 using OnlineLearningPlatform.Application.Services;
-using OnlineLearningPlatform.Domain.Entities;
 
 namespace OnlineLearningPlatform.Infrastructure.Implementations;
 
@@ -370,34 +369,5 @@ public class ProgressService(IUnitOfWork unitOfWork, IMapper mapper) : IProgress
         }
     }
     #endregion
-
-    public async Task UpdateProgressForNewLesson(int moduleId, Lesson lesson)
-    {
-        // Retrieve the module along with its course and enrolled users
-        var module = await _unitOfWork.Module.GetAsync(
-            m => m.Id == moduleId,
-            includeProperties: "Course.Enrollments") 
-            ?? throw new Exception("Module not found!");
-
-        // Iterate through each enrolled user in the course
-        foreach (var enrollment in module.Course.Enrollments)
-        {
-            var userId = enrollment.StudentId;
-
-            // Create a new progress entity for the new lesson and the enrolled user
-            var progress = new Progress
-            {
-                LessonId = lesson.Id,
-                StudentId = userId
-            };
-
-            // Add the new progress entry for this user
-            await _unitOfWork.Progress.AddAsync(progress);
-        }
-
-        // Save the progress records
-        await _unitOfWork.SaveAsync();
-    }
-
 }
 
