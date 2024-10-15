@@ -4,8 +4,6 @@ using OnlineLearningPlatform.UI.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using OnlineLearningPlatform.Infrastructure.Configurations;
 using OnlineLearningPlatform.Infrastructure.Services;
-using Hangfire;
-using System.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,9 +15,6 @@ builder.Services.AddDatabaseConfiguration(builder.Configuration);
 
 // configure identity
 builder.Services.AddIdentityConfiguration();
-
-// Add Hangfire services
-HangfireConfig.AddHangfireServices(builder.Services, builder.Configuration.GetConnectionString("HangfireConnection"));
 
 
 // configure lifetime for services
@@ -74,12 +69,10 @@ app.UseStaticFiles();
 
 app.UseCors("AllowSpecificOrigins");
 
+
 app.UseRouting();
 
 app.UseAuthorization();
-
-// Use Hangfire Dashboard
-app.UseHangfireDashboard("/hangfire"); // Optional: specify route for dashboard
 
 app.MapAreaControllerRoute(
     name: "MyAreaArchitect",
