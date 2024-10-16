@@ -6,10 +6,14 @@ using OnlineLearningPlatform.Domain.Entities;
 
 namespace OnlineLearningPlatform.Infrastructure.Implementations;
 
-public class CourseService(IUnitOfWork unitOfWork, IMapper mapper) : ICourseService
+public class CourseService(IUnitOfWork unitOfWork, IMapper mapper,
+    IEnrollmentService enrollmentService,
+    IProgressService progressService) : ICourseService
 {
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
     private readonly IMapper _mapper = mapper;
+    private readonly IEnrollmentService _enrollmentService = enrollmentService;
+    private readonly IProgressService _progressService = progressService;
 
     #region Course Management
     public async Task<ResponseDTO<IEnumerable<CourseDTO>>> GetAllCoursesAsync()
@@ -218,53 +222,17 @@ public class CourseService(IUnitOfWork unitOfWork, IMapper mapper) : ICourseServ
     {
         try
         {
-            // Check if the student is already enrolled
-            var existEnrollment = await _unitOfWork.Enrollment.AnyAsync(
-                e => e.CourseId.Equals(courseId) && e.StudentId.Equals(userId));
+            #region Checking and Create Enrollment
+            var enrollmentResult = await _enrollmentService.EnrollStudentInCourseAsync(courseId, userId);
+            if (!enrollmentResult.Success)
+                throw new Exception(enrollmentResult.Message);
+            #endregion
 
-            if (existEnrollment)
-                throw new Exception("Student already enrolled for this course!");
-
-            // Prepare the enrollment
-            Enrollment enrollmentForDb = new()
-            {
-                CourseId = courseId,
-                StudentId = userId,
-                EnrollmentDate = DateTime.Now
-            };
-
-            await _unitOfWork.Enrollment.AddAsync(enrollmentForDb);
-
-            // Get the list of lessons in the course
-            var course = await _unitOfWork.Course.GetAsync(
-                filter: c => c.Id.Equals(courseId),
-                includeProperties: "Modules.Lessons");
-
-            if (course?.Modules == null || course.Modules.Count == 0)
-                throw new Exception("No modules or lessons found for this course.");
-
-            // Prepare and create Progress records for each lesson
-            foreach (var module in course.Modules)
-            {
-                if (module.Lessons != null && module.Lessons.Count != 0)
-                {
-                    foreach (var lesson in module.Lessons)
-                    {
-                        Progress progressForDb = new()
-                        {
-                            StudentId = userId,
-                            LessonId = lesson.Id,
-                            IsCompleted = false,
-                            CompletionDate = DateTime.MinValue // Default, since it's not completed yet
-                        };
-
-                        await _unitOfWork.Progress.AddAsync(progressForDb);
-                    }
-                }
-            }
-
-            // Save the enrollment and progress records
-            await _unitOfWork.SaveAsync();
+            #region Create progresses for enrolled user
+            var createProgressesResult = await _progressService.CreateCourseLessonsProgressForStudentAsync(courseId, userId);
+            if (!createProgressesResult.Success) 
+                throw new Exception(createProgressesResult.Message);
+            #endregion
 
             return new ResponseDTO<object>(null, "Student successfully enrolled in the course, progress initialized.");
         }
@@ -277,12 +245,13 @@ public class CourseService(IUnitOfWork unitOfWork, IMapper mapper) : ICourseServ
     {
         try
         {
-            var enrollmentFromDb = await _unitOfWork.Enrollment.GetAsync(
-                e => e.CourseId.Equals(courseId) && e.StudentId.Equals(userId)
-                ) ?? throw new Exception("Enrollment not found!");
+            #region Progresses removed
+            await _progressService.DeleteCourseLessonsProgressForStudentAsync(courseId, userId);
+            #endregion
 
-            await _unitOfWork.Enrollment.RemoveAsync(enrollmentFromDb);
-            await _unitOfWork.SaveAsync();
+            #region Remove enrollment
+            await _enrollmentService.UnenrollStudentFromCourseAsync(courseId, userId);
+            #endregion
 
             return new ResponseDTO<object>(null, "Unenroll student from course!");
         }

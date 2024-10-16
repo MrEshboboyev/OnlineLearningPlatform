@@ -2,6 +2,7 @@
 using OnlineLearningPlatform.Application.Common.Interfaces;
 using OnlineLearningPlatform.Application.DTOs;
 using OnlineLearningPlatform.Application.Services;
+using OnlineLearningPlatform.Domain.Entities;
 
 namespace OnlineLearningPlatform.Infrastructure.Implementations;
 
@@ -9,6 +10,78 @@ public class ProgressService(IUnitOfWork unitOfWork, IMapper mapper) : IProgress
 {
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
     private readonly IMapper _mapper = mapper;
+
+    #region Create Progress
+    public async Task<ResponseDTO<object>> CreateCourseLessonsProgressForStudentAsync(int courseId, string userId)
+    {
+        try
+        {
+            // Get the list of lessons in the course
+            var course = await _unitOfWork.Course.GetAsync(
+                filter: c => c.Id.Equals(courseId),
+                includeProperties: "Modules.Lessons");
+
+            if (course?.Modules == null || course.Modules.Count == 0)
+                throw new Exception("No modules or lessons found for this course.");
+
+            // Prepare and create Progress records for each lesson
+            foreach (var module in course.Modules)
+            {
+                if (module.Lessons != null && module.Lessons.Count != 0)
+                {
+                    foreach (var lesson in module.Lessons)
+                    {
+                        Progress progressForDb = new()
+                        {
+                            StudentId = userId,
+                            LessonId = lesson.Id,
+                            IsCompleted = false,
+                            CompletionDate = DateTime.MinValue // Default, since it's not completed yet
+                        };
+
+                        await _unitOfWork.Progress.AddAsync(progressForDb);
+                    }
+                }
+            }
+
+            // Save the enrollment and progress records
+            await _unitOfWork.SaveAsync();
+
+            return new ResponseDTO<object>(null, "Create progress for course lessons!");
+        }
+        catch (Exception ex)
+        {
+            return new ResponseDTO<object>(ex.Message);
+        }
+    }
+    #endregion
+
+    #region Delete Progress
+    public async Task<ResponseDTO<object>> DeleteCourseLessonsProgressForStudentAsync(int courseId, string userId)
+    {
+        try
+        {
+            var studentProgressesForCourse = (await GetStudentProgressInCourseAsync(userId, courseId)).Data;
+            
+            foreach (var progress in studentProgressesForCourse)
+            {
+                var progressFromDb = await _unitOfWork.Progress.GetAsync(
+                    p => p.Id.Equals(progress.Id)
+                    ) ?? throw new Exception("Progress not found");
+
+                await _unitOfWork.Progress.RemoveAsync(progressFromDb);
+            }
+
+            await _unitOfWork.SaveAsync();
+
+            return new ResponseDTO<object>(null, "All user progress in this course has been deleted.");
+        }
+        catch (Exception ex)
+        {
+            return new ResponseDTO<object>(ex.Message);
+        }
+    }
+    #endregion
 
     #region Progress Tracking
     public async Task<ResponseDTO<ProgressDTO>> GetStudentProgressInLessonAsync(string studentId, int lessonId)
@@ -370,4 +443,3 @@ public class ProgressService(IUnitOfWork unitOfWork, IMapper mapper) : IProgress
     }
     #endregion
 }
-

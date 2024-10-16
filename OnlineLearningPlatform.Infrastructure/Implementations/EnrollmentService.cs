@@ -51,6 +51,13 @@ public class EnrollmentService(IUnitOfWork unitOfWork, IMapper mapper) : IEnroll
     {
         try
         {
+            #region Checking Enrollment Exist
+            var existEnrollment = (await IsStudentEnrolledInCourseAsync(courseId, studentId)).Data;
+            if (existEnrollment)
+                return new ResponseDTO<object>("Student already enrolled for this course!");
+            #endregion
+
+            #region Create Enrollment
             var courseFromDb = await _unitOfWork.Course.GetAsync(c => c.Id.Equals(courseId))
                 ?? throw new Exception("Course not found");
 
@@ -67,8 +74,9 @@ public class EnrollmentService(IUnitOfWork unitOfWork, IMapper mapper) : IEnroll
 
             await _unitOfWork.Enrollment.AddAsync(enrollmentForDb);
             await _unitOfWork.SaveAsync();
+            #endregion
 
-            return new ResponseDTO<object>(null);
+            return new ResponseDTO<object>(null, "Student successfully enrolled in the course, progress initialized.");
         }
         catch (Exception ex)
         {
@@ -86,7 +94,7 @@ public class EnrollmentService(IUnitOfWork unitOfWork, IMapper mapper) : IEnroll
             await _unitOfWork.Enrollment.RemoveAsync(enrollmentFromDb);
             await _unitOfWork.SaveAsync();
 
-            return new ResponseDTO<object>(null);
+            return new ResponseDTO<object>(null, "Unenroll student from course!");
         }
         catch (Exception ex)
         {

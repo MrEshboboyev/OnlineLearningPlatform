@@ -4,6 +4,14 @@ namespace OnlineLearningPlatform.Application.Services;
 
 public interface IProgressService
 {
+    #region Create Progress
+    Task<ResponseDTO<object>> CreateCourseLessonsProgressForStudentAsync(int courseId, string userId);
+    #endregion
+
+    #region Delete Progress
+    Task<ResponseDTO<object>> DeleteCourseLessonsProgressForStudentAsync(int courseId, string userId);
+    #endregion
+
     #region Progress Tracking
     Task<ResponseDTO<ProgressDTO>> GetStudentProgressInLessonAsync(string studentId, int lessonId);
     Task<ResponseDTO<IEnumerable<ProgressDTO>>> GetStudentProgressInCourseAsync(string studentId, int courseId);

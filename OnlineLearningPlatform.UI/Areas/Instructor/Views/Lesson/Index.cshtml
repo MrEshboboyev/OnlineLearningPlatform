@@ -7,24 +7,30 @@
 <div class="container mt-4">
     <h1 class="text-center mb-4">Manage Your Lessons</h1>
     <!-- Lessons list -->
-    <div class="row" id="lessonsContainer">
+    <div class="accordion" id="lessonsAccordion">
         @foreach (var lesson in Model)
         {
-            <div class="col-md-6 mb-4 lesson-item" data-course-id="@lesson.ModuleDTO.CourseId" data-module-id="@lesson.ModuleId">
-                <div class="card shadow-sm">
-                    <div class="card-header bg-primary text-white">
-                        <h5 class="card-title">@lesson.Title</h5>
-                        <p class="card-subtitle">@lesson.ModuleDTO.CourseDTO.Title (@lesson.ModuleDTO.Title)</p>
-                    </div>
-                    <div class="card-body">
-                        <p class="card-text">@lesson.Content</p>
-                    </div>
-                    <div class="card-footer text-end">
-                        <a asp-action="EditLesson" asp-route-lessonId="@lesson.Id" class="btn btn-warning btn-sm">Edit</a>
-                        <a asp-action="DeleteLesson" asp-route-lessonId="@lesson.Id" class="btn btn-danger btn-sm">Delete</a>
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="heading-@lesson.Id">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-@lesson.Id" aria-expanded="false" aria-controls="collapse-@lesson.Id">
+                        @lesson.Title
+                    </button>
+                </h2>
+                <div id="collapse-@lesson.Id" class="accordion-collapse collapse" aria-labelledby="heading-@lesson.Id" data-bs-parent="#lessonsAccordion">
+                    <div class="accordion-body">
+                        <div class="card">
+                            <div class="card-body">
+                                <p class="card-text">@Html.Raw(lesson.Content)</p>
+                            </div>
+                            <div class="card-footer text-end">
+                                <a asp-action="EditLesson" asp-route-lessonId="@lesson.Id" class="btn btn-warning btn-sm">Edit</a>
+                                <a asp-action="DeleteLesson" asp-route-lessonId="@lesson.Id" class="btn btn-danger btn-sm">Delete</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         }
     </div>
 </div>
+
