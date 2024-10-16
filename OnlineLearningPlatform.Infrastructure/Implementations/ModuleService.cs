@@ -6,10 +6,12 @@ using OnlineLearningPlatform.Domain.Entities;
 
 namespace OnlineLearningPlatform.Infrastructure.Implementations;
 
-public class ModuleService(IUnitOfWork unitOfWork, IMapper mapper) : IModuleService
+public class ModuleService(IUnitOfWork unitOfWork, IMapper mapper,
+    ILessonService lessonService) : IModuleService
 {
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
     private readonly IMapper _mapper = mapper;
+    private readonly ILessonService _lessonService = lessonService;
 
     #region Module Management
     public async Task<ResponseDTO<IEnumerable<ModuleDTO>>> GetAllModulesAsync()
@@ -104,8 +106,8 @@ public class ModuleService(IUnitOfWork unitOfWork, IMapper mapper) : IModuleServ
         {
             var moduleFromDb = await _unitOfWork.Module.GetAsync(
                 m => m.Id.Equals(moduleDTO.Id)
-                ) ?? throw new Exception("Module not found!"); 
-            
+                ) ?? throw new Exception("Module not found!");
+
             // mapping fields
             _mapper.Map(moduleDTO, moduleFromDb);
 
@@ -165,19 +167,8 @@ public class ModuleService(IUnitOfWork unitOfWork, IMapper mapper) : IModuleServ
     {
         try
         {
-            var module = await _unitOfWork.Module.GetAsync(
-                m => m.Id.Equals(moduleId),
-                includeProperties: "Lessons")
-                ?? throw new Exception("Module not found!");
-
-            // prepare and add lesson
-            var lesson = _mapper.Map<Lesson>(lessonDTO);
-
-            module.Lessons.Add(lesson);
-
-            // update and save
-            await _unitOfWork.Module.UpdateAsync(module);
-            await _unitOfWork.SaveAsync();
+            lessonDTO.ModuleId = moduleId;
+            await _lessonService.CreateLessonAsync(lessonDTO);
 
             return new ResponseDTO<object>(null, "Add lesson to module!");
         }
@@ -190,13 +181,12 @@ public class ModuleService(IUnitOfWork unitOfWork, IMapper mapper) : IModuleServ
     {
         try
         {
-            var lesson = await _unitOfWork.Lesson.GetAsync(
-                l => l.ModuleId.Equals(moduleId) && l.Id.Equals(lessonId)
-                ) ?? throw new Exception("Module not found!");
-
-            // remove and save
-            await _unitOfWork.Lesson.UpdateAsync(lesson);
-            await _unitOfWork.SaveAsync();
+            LessonDTO lessonDTO = new()
+            {
+                ModuleId = moduleId,
+                Id = lessonId
+            };
+            await _lessonService.DeleteLessonAsync(lessonDTO);
 
             return new ResponseDTO<object>(null, "Remove lesson to module!");
         }
@@ -230,11 +220,11 @@ public class ModuleService(IUnitOfWork unitOfWork, IMapper mapper) : IModuleServ
                 includeProperties: "Lessons") ?? throw new Exception("Module not found!");
 
             var moduleLessons = module.Lessons;
-            
+
             // getting completed lessonIds for student
             var studentCompletedProgressesForModule = await _unitOfWork.Progress.GetAllAsync(
-                p => p.StudentId.Equals(studentId) && 
-                p.Lesson.ModuleId.Equals(moduleId) && 
+                p => p.StudentId.Equals(studentId) &&
+                p.Lesson.ModuleId.Equals(moduleId) &&
                 p.IsCompleted);
 
             var completedLessonIds = studentCompletedProgressesForModule.Select(p => p.LessonId);
@@ -276,7 +266,7 @@ public class ModuleService(IUnitOfWork unitOfWork, IMapper mapper) : IModuleServ
         try
         {
             var module = await _unitOfWork.Module.GetAsync(
-                m => m.Id.Equals(moduleId), 
+                m => m.Id.Equals(moduleId),
                 includeProperties: "Lessons") ?? throw new Exception("Module not found!");
 
             var totalModuleLessons = module.Lessons.Count;

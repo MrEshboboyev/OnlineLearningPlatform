@@ -107,6 +107,28 @@ public class LessonService(IUnitOfWork unitOfWork, IMapper mapper) : ILessonServ
             await _unitOfWork.Lesson.AddAsync(lessonForDb);
             await _unitOfWork.SaveAsync();
 
+            // create courses for new lesson for course enrollments
+            var lessonFromDb = await _unitOfWork.Lesson.GetAsync(
+                filter: l => l.Id.Equals(lessonForDb.Id),
+                includeProperties: "Module") ?? throw new Exception("Lesson not found!");
+
+            var enrollments = await _unitOfWork.Enrollment.GetAllAsync(
+                filter: e => e.CourseId.Equals(lessonFromDb.Module.CourseId));
+
+            foreach (var enrollment in enrollments)
+            {
+                // create progress for each enrolled student
+                Progress progress = new()
+                {
+                    LessonId = lessonFromDb.Id,
+                    StudentId = enrollment.StudentId
+                };
+
+                await _unitOfWork.Progress.AddAsync(progress);
+            }
+
+            await _unitOfWork.SaveAsync();
+
             return new ResponseDTO<object>(null, "Create lesson!");
         }
         catch (Exception ex)
@@ -140,10 +162,24 @@ public class LessonService(IUnitOfWork unitOfWork, IMapper mapper) : ILessonServ
         try
         {
             var lessonFromDb = await _unitOfWork.Lesson.GetAsync(
-                l => l.Id.Equals(lessonDTO.Id)
-                ) ?? throw new Exception("Lesson not found!");
+                filter: l => l.Id.Equals(lessonDTO.Id),
+                includeProperties: "Module") ?? throw new Exception("Lesson not found!");
 
             await _unitOfWork.Lesson.RemoveAsync(lessonFromDb);
+
+            // remove progresses for new lesson for course enrollments
+            var enrollments = await _unitOfWork.Enrollment.GetAllAsync(
+                filter: e => e.CourseId.Equals(lessonFromDb.Module.CourseId));
+
+            foreach (var enrollment in enrollments)
+            {
+                var progressFromDb = await _unitOfWork.Progress.GetAsync(
+                    p => p.LessonId.Equals(lessonFromDb.Id) && p.StudentId.Equals(enrollment.StudentId)
+                    ) ?? throw new Exception("Progress not found!");
+
+                await _unitOfWork.Progress.RemoveAsync(progressFromDb);
+            }
+
             await _unitOfWork.SaveAsync();
 
             return new ResponseDTO<object>(null, "Delete lesson!");
