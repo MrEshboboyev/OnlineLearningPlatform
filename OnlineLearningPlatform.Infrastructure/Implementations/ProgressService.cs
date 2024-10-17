@@ -196,7 +196,7 @@ public class ProgressService(IUnitOfWork unitOfWork, IMapper mapper) : IProgress
             await _unitOfWork.Progress.UpdateAsync(progressFromDb);
             await _unitOfWork.SaveAsync();
 
-            return new ResponseDTO<object>(null);
+            return new ResponseDTO<object>(null, "Lesson completed!");
         }
         catch (Exception ex)
         {
@@ -217,7 +217,7 @@ public class ProgressService(IUnitOfWork unitOfWork, IMapper mapper) : IProgress
             await _unitOfWork.Progress.UpdateAsync(progressFromDb);
             await _unitOfWork.SaveAsync();
 
-            return new ResponseDTO<object>(null);
+            return new ResponseDTO<object>(null, "Lesson uncompleted!");
         }
         catch (Exception ex)
         {

@@ -10,9 +10,11 @@ namespace OnlineLearningPlatform.UI.Areas.Student.Controllers
     [Area(SD.Role_Student)]
     [Authorize(Roles = SD.Role_Student)]
     [Route($"{SD.Role_Student}/Lesson")]
-    public class LessonController(ILessonService lessonService) : BaseController
+    public class LessonController(ILessonService lessonService,
+        IProgressService progressService) : BaseController
     {
         private readonly ILessonService _lessonService = lessonService;
+        private readonly IProgressService _progressService = progressService;
 
         [HttpGet("{courseId}")]
         public async Task<IActionResult> Index(int courseId)
@@ -25,24 +27,29 @@ namespace OnlineLearningPlatform.UI.Areas.Student.Controllers
         public async Task<IActionResult> Details(int lessonId)
         {
             var lesson = (await _lessonService.GetLessonByIdAsync(lessonId)).Data;
+
+            // IsCompleted
+            ViewBag.IsCompleted = (await _lessonService.IsLessonCompletedAsync(lessonId, GetUserId())).Data;
             return View(lesson);
         }
 
         [HttpPost("MarkLessonComplete")]
-        public async Task<IActionResult> MarkLessonComplete(int lessonId)
+        public async Task<IActionResult> ToggleLessonCompletion(int lessonId)
         {
-            var result = await _lessonService.UpdateStudentProgressInLessonAsync(lessonId, GetUserId());
+            var isCompleted = (await _lessonService.IsLessonCompletedAsync(lessonId, GetUserId())).Data;
 
-            if (result.Success)
+            if (isCompleted)
             {
-                TempData["success"] = "Lesson is completed!";
+                await _progressService.UnmarkLessonAsCompletedAsync(GetUserId(), lessonId);
+                TempData["success"] = "Lesson is uncompleted!";
             }
             else
             {
-                TempData["error"] = $"Error : {result.Message}";
+                await _progressService.MarkLessonAsCompletedAsync(GetUserId(), lessonId);
+                TempData["success"] = "Lesson is completed!";
             }
 
-            return RedirectToAction(nameof(Details), lessonId);
+            return RedirectToAction(nameof(Details), new { lessonId });
         }
     }
 }

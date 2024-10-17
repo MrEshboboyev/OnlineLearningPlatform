@@ -26,14 +26,23 @@
         </div>
     </div>
 
-    <!-- Completion Form -->
+    <!-- Completion Form (Toggle Button) -->
     <div class="text-center mt-4">
-        @using (Html.BeginForm("MarkLessonComplete", "Lesson", FormMethod.Post, new { @class = "d-inline" }))
+        @using (Html.BeginForm("ToggleLessonCompletion", "Lesson", FormMethod.Post, new { @class = "d-inline" }))
         {
             @Html.Hidden("lessonId", Model.Id)
-            <button type="submit" class="btn btn-success">
-                Mark as Completed
-            </button>
+            @if (ViewBag.IsCompleted)
+            {
+                <button type="submit" class="btn btn-warning">
+                    Unmark as Completed
+                </button>
+            }
+            else
+            {
+                <button type="submit" class="btn btn-success">
+                    Mark as Completed
+                </button>
+            }
         }
     </div>
 
