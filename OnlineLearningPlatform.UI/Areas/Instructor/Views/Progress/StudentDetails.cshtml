@@ -1,58 +1,67 @@
 ﻿@model IEnumerable<ProgressDTO>
 
 <div class="container mt-5">
-    <h2 class="text-center mb-4 text-light">Progress Details for @Model.First().StudentDTO.UserName</h2>
+    <h2 class="text-center mb-4">Student Progress: @Model.FirstOrDefault()?.StudentDTO.UserName</h2>
 
-    <div class="accordion" id="moduleAccordion">
-        @if (!Model.Any())
-        {
-            <div class="alert alert-warning text-center" role="alert">
-                No progress data available for this student.
-            </div>
-        }
-        else
-        {
-            var modules = Model.GroupBy(p => p.LessonDTO.ModuleDTO);
-            foreach (var moduleGroup in modules)
+    <!-- Chart.js Placeholder for student's course progress -->
+    <div class="chart-container mb-4" style="max-width: 400px; margin: auto;">
+        <canvas id="studentProgressChart" width="400" height="300"></canvas>
+    </div>
+
+    <!-- Lessons progress -->
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th>Lesson Title</th>
+                <th>Status</th>
+                <th>Completion Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var progress in Model)
             {
-                var module = moduleGroup.Key;
-                <div class="accordion-item bg-dark border-light shadow-sm mb-3">
-                    <h2 class="accordion-header" id="heading-module-@module.Id">
-                        <button class="accordion-button collapsed text-light bg-secondary" type="button"
-                                data-bs-toggle="collapse" data-bs-target="#collapse-module-@module.Id"
-                                aria-expanded="false" aria-controls="collapse-module-@module.Id">
-                            @module.Title
-                        </button>
-                    </h2>
-                    <div id="collapse-module-@module.Id" class="accordion-collapse collapse"
-                         aria-labelledby="heading-module-@module.Id" data-bs-parent="#moduleAccordion">
-                        <div class="accordion-body text-light">
-                            <ul class="list-group list-group-flush">
-                                @foreach (var progress in moduleGroup)
-                                {
-                                    <li class="list-group-item bg-dark text-light d-flex justify-content-between">
-                                        <span>@progress.LessonDTO.Title</span>
-                                        @if (progress.IsCompleted)
-                                        {
-                                            <span class="badge bg-success">Completed on @progress.CompletionDate.ToShortDateString()</span>
-                                        }
-                                        else
-                                        {
-                                            <span class="badge bg-danger">Incomplete</span>
-                                        }
-                                    </li>
-                                }
-                            </ul>
-                        </div>
-                    </div>
-                </div>
+                <tr>
+                    <td>@progress.LessonDTO.Title</td>
+                    <td>
+                        @if (progress.IsCompleted)
+                        {
+                            <span class="badge bg-success">Completed</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-danger">Incomplete</span>
+                        }
+                    </td>
+                    <td>@(progress.IsCompleted ? progress.CompletionDate.ToShortDateString() : "N/A")</td>
+                </tr>
             }
-        }
-    </div>
-
-    <div class="text-end mt-4">
-        <a asp-action="StudentProgress" asp-route-courseId="@ViewBag.CourseId" class="btn btn-outline-primary">
-            Back to Course Progress
-        </a>
-    </div>
+        </tbody>
+    </table>
 </div>
+
+<!-- Include Chart.js and render the chart -->
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        var ctx = document.getElementById('studentProgressChart').getContext('2d');
+        var studentProgressChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: ['Completed', 'Incomplete'],
+                datasets: [{
+                    data: [
+        @Model.Count(p => p.IsCompleted),
+        @Model.Count(p => !p.IsCompleted)
+                            ],
+                    backgroundColor: ['rgba(75, 192, 192, 0.2)', 'rgba(255, 99, 132, 0.2)'],
+                    borderColor: ['rgba(75, 192, 192, 1)', 'rgba(255, 99, 132, 1)'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false
+            }
+        });
+    </script>
+}

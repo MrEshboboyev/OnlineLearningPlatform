@@ -1,0 +1,76 @@
+﻿@model IEnumerable<StudentProgressDTO>
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Course Progress Overview</h2>
+
+    <!-- Chart.js Placeholder for general course progress -->
+    <div class="chart-container mb-4" style="max-width: 600px; margin: auto;">
+        <canvas id="courseProgressChart" width="400" height="300"></canvas>
+    </div>
+
+    <!-- Students list with progress details -->
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th>Student</th>
+                <th>Total Lessons</th>
+                <th>Completed Lessons</th>
+                <th>Progress</th>
+                <th class="text-end">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var progress in Model)
+            {
+                <tr>
+                    <td>@progress.UserName</td>
+                    <td>@progress.TotalLessons</td>
+                    <td>@progress.CompletedLessons</td>
+                    <td>
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar"
+                                 style="width: @(progress.CompletedLessons * 100 / progress.TotalLessons)%">
+                                @progress.CompletedLessons / @progress.TotalLessons
+                            </div>
+                        </div>
+                    </td>
+                    <td class="text-end">
+                        <a href="@Url.Action("StudentDetails", new { courseId = progress.CourseId, studentId = progress.StudentId })" class="btn btn-primary btn-sm">
+                            View Details
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<!-- Include Chart.js and render the chart -->
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        var ctx = document.getElementById('courseProgressChart').getContext('2d');
+        var courseProgressChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: @Html.Raw(Json.Serialize(Model.Select(p => p.UserName).ToList())),
+                datasets: [{
+                    label: 'Lesson Completion',
+                    data: @Html.Raw(Json.Serialize(Model.Select(p => p.CompletedLessons).ToList())),
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+}

@@ -115,7 +115,7 @@ public class ProgressService(IUnitOfWork unitOfWork, IMapper mapper) : IProgress
             {
                 // get progress (lesson and student)
                 var progress = await _unitOfWork.Progress.GetAsync(
-                    p => p.LessonId.Equals(lesson.Id),
+                    p => p.LessonId.Equals(lesson.Id) && p.StudentId.Equals(studentId),
                     includeProperties: "Student,Lesson.Module.Course");
 
                 studentProgressesInCourse.Add(_mapper.Map<ProgressDTO>(progress));
