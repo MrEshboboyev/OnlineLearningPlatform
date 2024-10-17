@@ -195,22 +195,5 @@ namespace OnlineLearningPlatform.UI.Areas.Instructor.Controllers
             return RedirectToAction(nameof(Enrollments), new { courseId });
         }
         #endregion
-
-        #region Course-Student Progress management
-        [HttpGet("StudentProgress/{courseId}")]
-        public async Task<IActionResult> StudentProgress(int courseId)
-        {
-            var courseProgresses = (await _progressService.GetProgressesInCourseAsync(courseId)).Data;
-            return View(courseProgresses);
-        }
-
-        [HttpGet("StudentProgressDetails/{courseId}/{studentId}")]
-        public async Task<IActionResult> StudentProgressDetails(int courseId, string studentId)
-        {
-            var studentProgressInCourse = (await _progressService.
-                GetStudentProgressInCourseAsync(studentId, courseId)).Data;
-            return View(studentProgressInCourse);
-        }
-        #endregion
     }
 }

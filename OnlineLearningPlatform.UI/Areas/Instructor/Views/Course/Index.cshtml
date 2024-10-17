@@ -26,7 +26,7 @@
                             <button class="btn btn-secondary mb-3 hover-zoom" onclick="showDetails('Course', '@course.Title', '@course.Description')">
                                 View Course Details
                             </button>
-                            <a asp-action="StudentProgress" asp-route-courseId="@course.Id" class="btn btn-outline-primary mb-3 hover-zoom" >
+                            <a asp-controller="Progress" asp-action="Student" asp-route-courseId="@course.Id" class="btn btn-outline-primary mb-3 hover-zoom" >
                                 Student Progress
                             </a>
 
