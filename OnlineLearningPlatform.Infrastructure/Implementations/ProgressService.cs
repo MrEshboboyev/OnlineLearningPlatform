@@ -363,7 +363,7 @@ public class ProgressService(IUnitOfWork unitOfWork, IMapper mapper) : IProgress
     {
         try
         {
-            IList<ProgressDTO> studentProgressesInCourse = [];
+            int completedLessons = 0;
 
             var courseLessons = await _unitOfWork.Lesson.GetAllAsync(
                 filter: l => l.Module.CourseId.Equals(courseId));
@@ -371,15 +371,13 @@ public class ProgressService(IUnitOfWork unitOfWork, IMapper mapper) : IProgress
             // each progress for this course
             foreach (var lesson in courseLessons)
             {
-                // get progress (lesson and student)
-                var progress = await _unitOfWork.Progress.GetAsync(
-                    p => p.LessonId.Equals(lesson.Id),
-                    includeProperties: "Student,Lesson");
-
-                studentProgressesInCourse.Add(_mapper.Map<ProgressDTO>(progress));
+                if ((await IsLessonCompletedAsync(studentId, lesson.Id)).Data)
+                {
+                    completedLessons++;
+                }
             }
 
-            return new ResponseDTO<int>(studentProgressesInCourse.Count(p => p.IsCompleted));
+            return new ResponseDTO<int>(completedLessons);
         }
         catch (Exception ex)
         {
