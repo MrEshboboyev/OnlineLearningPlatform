@@ -36,7 +36,6 @@ namespace OnlineLearningPlatform.UI.Areas.Instructor.Controllers
             return View(studentProgress);
         }
 
-
         // View the progress of an individual student
         [HttpGet("StudentDetails/{courseId}/{studentId}")]
         public async Task<IActionResult> StudentDetails(int courseId, string studentId)

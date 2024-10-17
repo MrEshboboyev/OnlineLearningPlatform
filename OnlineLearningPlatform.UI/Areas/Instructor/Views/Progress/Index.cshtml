@@ -3,10 +3,8 @@
 <div class="container mt-5">
     <h2 class="text-center mb-4">Course Progress Overview</h2>
 
-    <!-- Chart.js Placeholder for general course progress -->
-    <div class="chart-container mb-4" style="max-width: 600px; margin: auto;">
-        <canvas id="courseProgressChart" width="400" height="300"></canvas>
-    </div>
+    <!-- ApexCharts Placeholder for general course progress -->
+    <div id="courseProgressChart" class="chart-container mb-4" style="max-width: 600px; margin: auto;"></div>
 
     <!-- Students list with progress details -->
     <table class="table table-striped table-hover">
@@ -45,32 +43,34 @@
     </table>
 </div>
 
-<!-- Include Chart.js and render the chart -->
+<!-- Include ApexCharts and render the chart -->
 @section Scripts {
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script>
-        var ctx = document.getElementById('courseProgressChart').getContext('2d');
-        var courseProgressChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: @Html.Raw(Json.Serialize(Model.Select(p => p.UserName).ToList())),
-                datasets: [{
-                    label: 'Lesson Completion',
-                    data: @Html.Raw(Json.Serialize(Model.Select(p => p.CompletedLessons).ToList())),
-                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                    borderColor: 'rgba(54, 162, 235, 1)',
-                    borderWidth: 1
-                }]
+        var options = {
+            chart: {
+                type: 'bar',
+                height: 300
             },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
+            series: [{
+                name: 'Completed Lessons',
+                data: @Html.Raw(Json.Serialize(Model.Select(p => p.CompletedLessons).ToList()))
+            }],
+            xaxis: {
+                categories: @Html.Raw(Json.Serialize(Model.Select(p => p.UserName).ToList()))
+            },
+            title: {
+                text: 'Lesson Completion by Student'
+            },
+            colors: ['#36A2EB'],
+            plotOptions: {
+                bar: {
+                    distributed: true
                 }
             }
-        });
+        };
+
+        var chart = new ApexCharts(document.querySelector("#courseProgressChart"), options);
+        chart.render();
     </script>
 }
