@@ -1,0 +1,54 @@
+﻿@model IEnumerable<CourseStatisticsDTO>
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Instructor Dashboard</h2>
+
+    <!-- ApexCharts for Enrollment Overview -->
+    <div id="enrollmentChart" class="mb-5" style="max-width: 800px; margin: auto;"></div>
+
+    <!-- ApexCharts for Progress Overview -->
+    <div id="progressChart" style="max-width: 800px; margin: auto;"></div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script>
+        // Enrollment Data
+        var enrollmentOptions = {
+            chart: {
+                type: 'bar',
+                height: 350
+            },
+            series: [{
+                name: 'Enrollments',
+                data: @Html.Raw(Json.Serialize(Model.Select(c => c.EnrollmentCount).ToList()))
+            }],
+            xaxis: {
+                categories: @Html.Raw(Json.Serialize(Model.Select(c => c.CourseTitle).ToList()))
+            },
+            title: {
+                text: 'Enrollments by Course'
+            },
+            colors: ['#36A2EB']
+        };
+
+        var enrollmentChart = new ApexCharts(document.querySelector("#enrollmentChart"), enrollmentOptions);
+        enrollmentChart.render();
+
+        // Progress Data
+        var progressOptions = {
+            chart: {
+                type: 'radialBar',
+                height: 350
+            },
+            series: @Html.Raw(Json.Serialize(Model.Select(c => c.AverageCompletionPercentage).ToList())),
+            labels: @Html.Raw(Json.Serialize(Model.Select(c => c.CourseTitle).ToList())),
+            title: {
+                text: 'Average Course Completion (%)'
+            }
+        };
+
+        var progressChart = new ApexCharts(document.querySelector("#progressChart"), progressOptions);
+        progressChart.render();
+    </script>
+}

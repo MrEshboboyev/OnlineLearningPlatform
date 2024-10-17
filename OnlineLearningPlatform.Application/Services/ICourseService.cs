@@ -31,6 +31,7 @@ public interface ICourseService
 
     #region Course Modules and Content
     Task<ResponseDTO<IEnumerable<ModuleDTO>>> GetModulesByCourseAsync(int courseId);
+    Task<ResponseDTO<int>> GetLessonsCountByCourseAsync(int courseId);
 
     // POST actions
     Task<ResponseDTO<object>> AddModuleToCourseAsync(int courseId, ModuleDTO moduleDTO);

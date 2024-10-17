@@ -8,6 +8,7 @@ using OnlineLearningPlatform.UI.Services.IServices;
 using Microsoft.AspNetCore.Identity;
 using OnlineLearningPlatform.Domain.Entities;
 using System.IdentityModel.Tokens.Jwt;
+using OnlineLearningPlatform.Application.Common.Utility;
 
 namespace OnlineLearningPlatform.UI.Controllers
 {
@@ -68,7 +69,6 @@ namespace OnlineLearningPlatform.UI.Controllers
             return View(model);
         }
 
-
         [HttpPost]
         public async Task<IActionResult> Login(LoginModel loginModel)
         {
@@ -83,6 +83,16 @@ namespace OnlineLearningPlatform.UI.Controllers
                 _tokenProvider.SetToken(result.Data);
 
                 TempData["success"] = "Login successfully!";
+
+                if (User.IsInRole(SD.Role_Instructor))
+                {
+                    return RedirectToAction("Index", "Dashboard", new { Area = "Instructor"});
+                }
+                else if (User.IsInRole(SD.Role_Student))
+                {
+                    return RedirectToAction("Index", "Dashboard", new { Area = "Student" });
+                }
+
                 return RedirectToAction("Index", "Home");
             }
 

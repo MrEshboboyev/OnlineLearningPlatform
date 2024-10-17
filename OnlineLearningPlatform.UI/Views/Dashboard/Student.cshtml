@@ -1,0 +1,35 @@
+﻿@model IEnumerable<StudentCourseProgressDTO> 
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Student Dashboard</h2>
+
+    <!-- ApexCharts for Student Progress Overview -->
+    <div id="studentProgressChart" class="mb-5" style="max-width: 800px; margin: auto;"></div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script>
+        // Student Progress Data
+        var options = {
+            chart: {
+                type: 'bar',
+                height: 350
+            },
+            series: [{
+                name: 'Completed Lessons',
+                data: @Html.Raw(Json.Serialize(Model.Select(c => c.CompletedLessons).ToList()))
+            }],
+            xaxis: {
+                categories: @Html.Raw(Json.Serialize(Model.Select(c => c.CourseTitle).ToList()))
+            },
+            title: {
+                text: 'Your Progress by Course'
+            },
+            colors: ['#4CAF50']
+        };
+
+        var chart = new ApexCharts(document.querySelector("#studentProgressChart"), options);
+        chart.render();
+    </script>
+}

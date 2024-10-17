@@ -280,6 +280,20 @@ public class CourseService(IUnitOfWork unitOfWork, IMapper mapper,
             return new ResponseDTO<IEnumerable<ModuleDTO>>(ex.Message);
         }
     }
+    public async Task<ResponseDTO<int>> GetLessonsCountByCourseAsync(int courseId)
+    {
+        try
+        {
+            var courseLessons = await _unitOfWork.Lesson.GetAllAsync(
+                filter: m => m.Module.CourseId.Equals(courseId));
+
+            return new ResponseDTO<int>(courseLessons.Count());
+        }
+        catch (Exception ex)
+        {
+            return new ResponseDTO<int>(ex.Message);
+        }
+    }
 
     // POST actions
     public async Task<ResponseDTO<object>> AddModuleToCourseAsync(int courseId, ModuleDTO moduleDTO)
