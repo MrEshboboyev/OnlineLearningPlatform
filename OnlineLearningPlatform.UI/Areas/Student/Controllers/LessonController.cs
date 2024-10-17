@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AspNetCoreGeneratedDocument;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OnlineLearningPlatform.Application.Common.Utility;
 using OnlineLearningPlatform.Application.Services;
@@ -25,6 +26,23 @@ namespace OnlineLearningPlatform.UI.Areas.Student.Controllers
         {
             var lesson = (await _lessonService.GetLessonByIdAsync(lessonId)).Data;
             return View(lesson);
+        }
+
+        [HttpPost("MarkLessonComplete")]
+        public async Task<IActionResult> MarkLessonComplete(int lessonId)
+        {
+            var result = await _lessonService.UpdateStudentProgressInLessonAsync(lessonId, GetUserId());
+
+            if (result.Success)
+            {
+                TempData["success"] = "Lesson is completed!";
+            }
+            else
+            {
+                TempData["error"] = $"Error : {result.Message}";
+            }
+
+            return RedirectToAction(nameof(Details), lessonId);
         }
     }
 }

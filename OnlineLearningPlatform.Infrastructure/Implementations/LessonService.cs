@@ -280,8 +280,12 @@ public class LessonService(IUnitOfWork unitOfWork, IMapper mapper) : ILessonServ
 
             // update LessonProgress completed
             lessonProgress.IsCompleted = true;
+            lessonProgress.CompletionDate = DateTime.Now;
 
-            return new ResponseDTO<object>(null);
+            await _unitOfWork.Progress.UpdateAsync(lessonProgress);
+            await _unitOfWork.SaveAsync();
+
+            return new ResponseDTO<object>(null, "Lesson Completed by student!");
         }
         catch (Exception ex)
         {

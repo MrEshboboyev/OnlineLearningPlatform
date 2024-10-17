@@ -26,7 +26,18 @@
         </div>
     </div>
 
-    <div class="text-end">
+    <!-- Completion Form -->
+    <div class="text-center mt-4">
+        @using (Html.BeginForm("MarkLessonComplete", "Lesson", FormMethod.Post, new { @class = "d-inline" }))
+        {
+            @Html.Hidden("lessonId", Model.Id)
+            <button type="submit" class="btn btn-success">
+                Mark as Completed
+            </button>
+        }
+    </div>
+
+    <div class="text-end mt-4">
         <a href="@Url.Action("Index", "Lesson", new { courseId = Model.ModuleDTO.CourseId })" class="btn btn-outline-secondary">
             <i class="bi bi-arrow-left"></i> Back to Lessons
         </a>
