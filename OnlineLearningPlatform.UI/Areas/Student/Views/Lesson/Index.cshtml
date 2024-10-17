@@ -2,56 +2,62 @@
 
 @{
     ViewBag.Title = "Course Lessons";
+    int accordionIndex = 0; // Unique index for each accordion item
 }
 
 <div class="container mt-5">
     <h1 class="text-center mb-4">Lessons for @Model.FirstOrDefault()?.ModuleDTO.CourseDTO.Title</h1>
 
-    <!-- Display Modules as Cards -->
-    @foreach (var module in Model.GroupBy(x => x.ModuleDTO))
-    {
-        <div class="card shadow-sm mb-4">
-            <!-- Module Title as the card header -->
-            <div class="card-header bg-dark text-light">
-                <h4 class="mb-0 d-flex justify-content-between align-items-center">
-                    @module.Key.Title
-                    <button class="btn btn-light btn-sm" data-bs-toggle="collapse" data-bs-target="#moduleContent-@module.Key.Id">
-                        Show Lessons
+    <!-- Accordion Structure for Modules -->
+    <div class="accordion" id="courseAccordion">
+        @foreach (var module in Model.GroupBy(x => x.ModuleDTO))
+        {
+            var moduleId = $"module-{accordionIndex}"; // Unique ID for each module in accordion
+            <div class="accordion-item">
+                <!-- Module Title as accordion header -->
+                <h2 class="accordion-header" id="heading-@moduleId">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-@moduleId" aria-expanded="false" aria-controls="collapse-@moduleId">
+                        @module.Key.Title
                     </button>
-                </h4>
-            </div>
+                </h2>
 
-            <!-- Collapsible Section for Lessons -->
-            <div id="moduleContent-@module.Key.Id" class="collapse">
-                <div class="card-body">
-                    @if (!module.Any())
-                    {
-                        <p class="text-muted">No lessons available for this module yet.</p>
-                    }
-                    else
-                    {
-                        <div class="row">
-                            @foreach (var lesson in module)
-                            {
-                                <div class="col-md-4 mb-4">
-                                    <!-- Lesson as a card -->
-                                    <div class="card h-100 shadow-sm">
-                                        <div class="card-header bg-primary text-white">
-                                            <h5 class="card-title">@lesson.Title</h5>
-                                        </div>
-                                        <div class="card-body">
-                                            <p class="card-text text-truncate">@Html.Raw(lesson.Content)</p>
-                                        </div>
-                                        <div class="card-footer text-end">
-                                            <a href="@Url.Action("Details", new { lessonId = lesson.Id })" class="btn btn-outline-light btn-sm">View Details</a>
+                <!-- Collapsible Section for Lessons -->
+                <div id="collapse-@moduleId" class="accordion-collapse collapse" aria-labelledby="heading-@moduleId" data-bs-parent="#courseAccordion">
+                    <div class="accordion-body">
+                        @if (!module.Any())
+                        {
+                            <p class="text-muted">No lessons available for this module yet.</p>
+                        }
+                        else
+                        {
+                            <div class="row">
+                                @foreach (var lesson in module.OrderBy(l => l.Order)) 
+                                {
+                                    <div class="col-md-4 mb-4">
+                                        <!-- Lesson as a card -->
+                                        <div class="card h-100 shadow-sm">
+                                            <div class="card-header bg-primary text-white">
+                                                <h5 class="card-title">@lesson.Title</h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <p class="card-text text-truncate">@Html.Raw(lesson.Content)</p>
+                                            </div>
+                                            <div class="card-footer text-end">
+                                                <a href="@Url.Action("Details", new { lessonId = lesson.Id })" class="btn btn-outline-light btn-sm">
+                                                    View Details
+                                                </a>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            }
-                        </div>
-                    }
+                                }
+                            </div>
+                        }
+                    </div>
                 </div>
             </div>
-        </div>
-    }
+
+            // Increment accordion index for uniqueness
+            accordionIndex++;
+        }
+    </div>
 </div>

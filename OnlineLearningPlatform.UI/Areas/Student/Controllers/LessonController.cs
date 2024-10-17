@@ -1,5 +1,4 @@
-﻿using AspNetCoreGeneratedDocument;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OnlineLearningPlatform.Application.Common.Utility;
 using OnlineLearningPlatform.Application.Services;
