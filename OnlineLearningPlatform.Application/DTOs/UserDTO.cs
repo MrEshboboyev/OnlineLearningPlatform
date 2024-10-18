@@ -34,4 +34,5 @@ public class UserDTO
     public ICollection<CourseDTO> CoursesTaughtDTOs { get; set; }  // Instructor for Courses
     public ICollection<EnrollmentDTO> EnrollmentsDTOs { get; set; } // Enrolled as Student in Courses
     public ICollection<QuizSubmissionDTO> QuizSubmissionsDTOs { get; set; } // Quiz Submissions
+    public ICollection<QuizAttemptDTO> QuizAttemptDTOs { get; set; } // Quiz Attempts
 }

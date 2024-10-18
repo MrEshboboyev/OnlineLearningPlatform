@@ -28,5 +28,6 @@ namespace OnlineLearningPlatform.Domain.Entities
         public ICollection<Course> CoursesTaught { get; set; }  // Instructor for Courses
         public ICollection<Enrollment> Enrollments { get; set; } // Enrolled as Student in Courses
         public ICollection<QuizSubmission> QuizSubmissions { get; set; } // Quiz Submissions
+        public ICollection<QuizAttempt> QuizAttempts { get; set; } // Quiz Attempts
     }
 }

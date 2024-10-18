@@ -95,6 +95,12 @@ namespace OnlineLearningPlatform.Infrastructure.Data
                 .WithMany(q => q.QuizSubmissions)
                 .HasForeignKey(qs => qs.QuizId);
 
+            // QuizAttempt configuration
+            modelBuilder.Entity<QuizAttempt>()
+                .HasOne(qa => qa.Quiz)
+                .WithMany(q => q.QuizAttempts)
+                .HasForeignKey(qa => qa.QuizId);
+
             // Define timestamp properties (DateTime and DateTime?)
             modelBuilder.Entity<AppUser>()
                 .Property(u => u.DateRegistered)
@@ -128,6 +134,11 @@ namespace OnlineLearningPlatform.Infrastructure.Data
 
             modelBuilder.Entity<QuizSubmission>()
                 .Property(qs => qs.SubmissionDate)
+                .HasColumnType("timestamp")
+                .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+            modelBuilder.Entity<QuizAttempt>()
+                .Property(qa => qa.AttemptDate)
                 .HasColumnType("timestamp")
                 .HasDefaultValueSql("CURRENT_TIMESTAMP");
         }
