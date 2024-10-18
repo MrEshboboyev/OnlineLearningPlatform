@@ -15,6 +15,7 @@
         IQuestionRepository Question { get; }
         IQuizRepository Quiz { get; }
         IQuizSubmissionRepository QuizSubmission { get; }
+        IQuizAttemptRepository QuizAttempt { get; }
 
         Task SaveAsync();
     }

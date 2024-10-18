@@ -20,6 +20,7 @@ namespace OnlineLearningPlatform.Infrastructure.Repositories
         public IQuestionRepository Question { get; private set; } = new QuestionRepository(db);
         public IQuizRepository Quiz { get; private set; } = new QuizRepository(db);
         public IQuizSubmissionRepository QuizSubmission { get; private set; } = new QuizSubmissionRepository(db);
+        public IQuizAttemptRepository QuizAttempt { get; private set; } = new QuizAttemptRepository(db);
 
 
         public async Task SaveAsync()

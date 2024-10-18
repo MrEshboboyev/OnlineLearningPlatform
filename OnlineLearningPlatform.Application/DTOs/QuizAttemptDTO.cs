@@ -12,6 +12,6 @@ public class QuizAttemptDTO
 
     public bool IsTimedOut { get; set; }
 
-    public QuizDTO Quiz { get; set; }
-    public UserDTO User { get; set; }
+    public QuizDTO QuizDTO { get; set; }
+    public UserDTO UserDTO { get; set; }
 }

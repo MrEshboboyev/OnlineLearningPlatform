@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using OnlineLearningPlatform.Application.DTOs;
 using OnlineLearningPlatform.Domain.Entities;
+using System.Runtime.CompilerServices;
 
 namespace OnlineLearningPlatform.Application.Mappings
 {
@@ -115,6 +116,17 @@ namespace OnlineLearningPlatform.Application.Mappings
                 .ReverseMap()
                     .ForMember(dest => dest.Student, opt => opt.Ignore())
                     .ForMember(dest => dest.Quiz, opt => opt.Ignore());
+            #endregion
+
+            #region QuizAttempt
+
+            // QuizAttempt -> QuizAttemptDTO (Reverse)
+            CreateMap<QuizAttempt, QuizAttemptDTO>()
+                .ForMember(dest => dest.QuizDTO, opt => opt.MapFrom(opt => opt.Quiz))
+                .ForMember(dest => dest.UserDTO, opt => opt.MapFrom(opt => opt.User))
+                .ReverseMap()
+                    .ForMember(dest => dest.Quiz, opt => opt.Ignore())
+                    .ForMember(dest => dest.User, opt => opt.Ignore());
             #endregion
 
             #region Progress
